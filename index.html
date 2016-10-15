@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <script src="scripts/babylon.js"></script>
+    <script src="scripts/babylon.max.js"></script>
     <script src="scripts/babylon.glTFFileLoader.js"></script>   
 </head>
 <body>  
         <p> 
-            Select Model <br/>
+            Select GLTF Model <br/>
         <button onclick="javascript: load(getSampleModelUrl(false, '2CylinderEngine'))">2CylinderEngine</button>
         <button onclick="javascript: load(getSampleModelUrl(false, 'Box'))">Box</button>
         <button onclick="javascript: load(getSampleModelUrl(false, 'BoxAnimated'))">BoxAnimated</button>
@@ -24,6 +24,26 @@
         <button onclick="javascript: load(getSampleModelUrl(false, 'RiggedFigure'))">RiggedFigure</button>
         <button onclick="javascript: load(getSampleModelUrl(false, 'RiggedSimple'))">RiggedSimple</button>
         <button onclick="javascript: load(getSampleModelUrl(false, 'VC'))">VC</button>
+    </p>
+    <p>
+       Select GLB Model  <br />
+        <button onclick="javascript: load(getSampleModelUrl(true, '2CylinderEngine'))">2CylinderEngine</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'Box'))">Box</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'BoxAnimated'))">BoxAnimated</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'BoxSemantics'))">BoxSemantics</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'BoxTextured'))">BoxTextured</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'BoxWithoutIndices'))">BoxWithoutIndices</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'BrainStem'))">BrainStem</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'Buggy'))">Buggy</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'CesiumMan'))">CesiumMan</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'CesiumMilkTruck'))">CesiumMilkTruck</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'Duck'))">Duck</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'GearboxAssy'))">GearboxAssy</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'Monster'))">Monster</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'ReciprocatingSaw'))">ReciprocatingSaw</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'RiggedFigure'))">RiggedFigure</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'RiggedSimple'))">RiggedSimple</button>
+        <button onclick="javascript: load(getSampleModelUrl(true, 'VC'))">VC</button>
     </p>
     <canvas id="renderCanvas"></canvas>
     <script>
@@ -61,7 +81,12 @@
         }
 
         function getSampleModelUrl(glb, name) {
+            if (glb) {
+                return "https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + name + "/glTF-Binary/" + name + ".glb";
+            }
+            else {
                 return "https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + name + "/glTF/" + name + ".gltf";
+            }
         }
     </script>
 </body >
