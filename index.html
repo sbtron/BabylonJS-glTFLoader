@@ -67,7 +67,7 @@
 
             BABYLON.SceneLoader.Load(rootUrl, fileName, engine, function (scene) {
                 var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, BABYLON.Vector3.Zero(), scene);
-                camera.setPosition(new BABYLON.Vector3(0, 0, -50));
+                camera.setPosition(new BABYLON.Vector3(0, 0, 50));
                 camera.attachControl(canvas);
                 scene.activeCamera = camera;
 
