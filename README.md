@@ -1,4 +1,4 @@
 # BabylonJS-glTFLoader
 Sample loading glTF models using BabylonJS
 
-Website - http://babylonjs-gltfloader.azurewebsites.net
+View Sample Model - https://sbtron.github.io/BabylonJS-glTFLoader/
