@@ -1834,7 +1834,7 @@ var BABYLON;
     var GLTFBinaryExtension = (function (_super) {
         __extends(GLTFBinaryExtension, _super);
         function GLTFBinaryExtension() {
-            _super.call(this, "KHR_binary_glTF");
+            _super.call(this, "FRAUNHOFER_binary_glTF");
         }
         GLTFBinaryExtension.prototype.loadRuntimeAsync = function (scene, data, rootUrl, onSuccess, onError) {
             var _this = this;
@@ -1966,7 +1966,7 @@ var BABYLON;
     var GLTFMaterialsPbrExtension = (function (_super) {
         __extends(GLTFMaterialsPbrExtension, _super);
         function GLTFMaterialsPbrExtension() {
-            _super.call(this, "KHR_materials_pbr");
+            _super.call(this, "FRAUNHOFER_materials_pbr");
         }
         GLTFMaterialsPbrExtension.prototype.loadMaterialAsync = function (gltfRuntime, id, onSuccess, onError) {
             var material = gltfRuntime.materials[id];
@@ -1974,7 +1974,7 @@ var BABYLON;
                 return false;
             }
             var materialPbrExt = material.extensions[this.name];
-            switch (materialPbrExt.technique) {
+            switch (materialPbrExt.materialModel) {
                 case "PBR_specular_glossiness":
                     onSuccess(this._loadSpecularGlossinessMaterial(gltfRuntime, id, materialPbrExt));
                     break;

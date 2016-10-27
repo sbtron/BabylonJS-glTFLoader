@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <script src="scripts/dat.gui.min.js"></script>
     <script src="scripts/babylon.max.js"></script>
     <script src="scripts/babylon.glTFFileLoader.js"></script>   
 </head>
@@ -40,8 +41,41 @@
                 });
             });
         }
-        load('Models/PrimitiveModels_IronOld.gltf');
         
+        function getSampleModelUrl(glb, name) {
+            if (glb) {
+                return "https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + name + "/glTF-Binary/" + name + ".glb";
+            }
+            else {
+                return "https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + name + "/glTF/" + name + ".gltf";
+            }
+        }
+
+        var menu = function(){
+            this.model = "Box";
+            this.filetype = "gltf";
+            this.load = function () {
+            if (this.filetype==="glb") {
+                load("https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + this.model + "/glTF-Binary/" + this.model + ".glb");
+            }
+            else {
+                load("https://raw.githubusercontent.com/KhronosGroup/glTF/master/sampleModels/" + this.model + "/glTF/" + this.model + ".gltf");
+            }
+            };
+            this.loadPBR = function (){
+                load('Models/PBR/Cloth_IronOld.gltf');
+            }
+        }
+
+        window.onload = function() {
+                var text = new menu();
+                var gui = new dat.GUI();
+                gui.add(text, 'model', ['Box','2CylinderEngine','BoxAnimated','BoxSemantics','BoxTextured','BoxWithoutIndices','BrainStem','Buggy','CesiumMan','CesiumMilkTruck','Duck','GearboxAssy','Monster','ReciprocatingSaw','RiggerFigure','RiggedSimple','VC']);
+                gui.add(text,'filetype',['gltf','glb']);
+                gui.add(text,'load');
+                gui.add(text,'loadPBR');        
+        }
+
     </script>
 </body>
 </html>
