@@ -14,7 +14,7 @@
 
         function load(url) {
             canvas.width = 800;
-            canvas.height = 480;
+            canvas.height = 800;
 
             if (engine) {
                 engine.dispose();
@@ -34,7 +34,7 @@
                 camera.panningSensibility = 50.0;
                 camera.angularSensibility = 500;
                 scene.activeCamera = camera;
-                
+                scene.debugLayer.show(true, camera);
 
 
                 var light = new BABYLON.DirectionalLight("light1", new BABYLON.Quaternion(0.4082179, -0.2345697, 0.1093817, 0.8754261), scene);
@@ -72,12 +72,7 @@
                 var type = gui.add(menu,'type',['PBR-SpecGloss','PBR-MetalRoughness','glTF']); 
                
                 model.onFinishChange(updateModel);
-
-                type.onFinishChange(function(value) {
-                    updateModel();
-                });
-
-                //gui.add(text,'load');
+                type.onFinishChange(updateModel);
                 load('Models/Telephone/PBR-SpecGloss/Telephone.gltf');
         }
 
