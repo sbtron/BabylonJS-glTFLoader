@@ -28,10 +28,14 @@
             var fileName = url.substring(split + 1, url.length);
 
             BABYLON.SceneLoader.Load(rootUrl, fileName, engine, function (scene) {
-                var camera = new BABYLON.ArcRotateCamera("camera", 0, 0, 1, BABYLON.Vector3.Zero(), scene);
-                camera.setPosition(new BABYLON.Vector3(0, 0, 25.0));
-                camera.attachControl(canvas);
+                
+                camera = new BABYLON.ArcRotateCamera("camera", 0, 1, 5, BABYLON.Vector3.Zero(), scene);
+                camera.attachControl(canvas, false, false);
+                camera.panningSensibility = 50.0;
+                camera.angularSensibility = 500;
                 scene.activeCamera = camera;
+                
+
 
                 var light = new BABYLON.DirectionalLight("light1", new BABYLON.Quaternion(0.4082179, -0.2345697, 0.1093817, 0.8754261), scene);
                 light.intensity = 0.7;
@@ -43,20 +47,38 @@
         }
         
 
-
-        var menu = function(){
-            this.model = "Cloth_IronOld";
-            this.load = function () {
-            load('Models/PBR/'+this.model+'.gltf');
-            };
+        var Menu = function(){
+            this.model = "Telephone";
+            this.type = "PBR-SpecGloss";
         }
 
+        var menu = new Menu();
+
+        function updateModel() {
+            if (menu.type === "PBR-MetalRoughness") {
+                alert("Not implemented yet");
+                }
+            else 
+                {
+                load('Models/'+menu.model+'/'+menu.type+'/'+menu.model+'.gltf');
+                }
+        
+            };
+
+        
         window.onload = function() {
-                var text = new menu();
                 var gui = new dat.GUI();
-                gui.add(text, 'model', ['Cloth_IronOld']);
-                gui.add(text,'load');
-                load('Models/PBR/Cloth_IronOld.gltf');
+                var model = gui.add(menu, 'model', ['Telephone','Avocado','BarramundiFish','FarmLandDiorama']);
+                var type = gui.add(menu,'type',['PBR-SpecGloss','PBR-MetalRoughness','glTF']); 
+               
+                model.onFinishChange(updateModel);
+
+                type.onFinishChange(function(value) {
+                    updateModel();
+                });
+
+                //gui.add(text,'load');
+                load('Models/Telephone/PBR-SpecGloss/Telephone.gltf');
         }
 
     </script>
