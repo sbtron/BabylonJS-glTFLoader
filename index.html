@@ -2,7 +2,7 @@
 <html>
 <head>
     <script src="scripts/dat.gui.min.js"></script>
-    <script src="scripts/babylon.2.5.js"></script>
+    <script src="scripts/babylon.js"></script>
     <script src="scripts/babylon.glTFFileLoader.js"></script>   
 </head>
 <body>  
@@ -10,11 +10,20 @@
     <script>
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
-
+        var activeCamera = null;
+        var cameraAlpha = 0;
+        var cameraBeta = 1;
+        var cameraRadius = 5;
 
         function load(url) {
-            canvas.width = 800;
-            canvas.height = 600;
+            canvas.width = 1000;
+            canvas.height = 800;
+
+            if (activeCamera) {
+                cameraAlpha = activeCamera.alpha;
+                cameraBeta = activeCamera.beta;
+                cameraRadius = activeCamera.radius;
+            } 
 
             if (engine) {
                 engine.dispose();
@@ -27,14 +36,16 @@
             var rootUrl = url.substring(0, split + 1);
             var fileName = url.substring(split + 1, url.length);
 
+            BABYLON.SceneLoader.ShowLoadingScreen = false;
             BABYLON.SceneLoader.Load(rootUrl, fileName, engine, function (scene) {
                 
-                camera = new BABYLON.ArcRotateCamera("camera", 0, 1, 5, BABYLON.Vector3.Zero(), scene);
+                camera = new BABYLON.ArcRotateCamera("camera", cameraAlpha, cameraBeta, cameraRadius, BABYLON.Vector3.Zero(), scene);
                 camera.attachControl(canvas, false, false);
                 camera.panningSensibility = 50.0;
                 camera.angularSensibility = 500;
                 scene.activeCamera = camera;
-                scene.debugLayer.show(true, camera);
+                activeCamera = camera;
+                
 
 
                 var light = new BABYLON.DirectionalLight("light1", new BABYLON.Quaternion(0.4082179, -0.2345697, 0.1093817, 0.8754261), scene);
@@ -55,13 +66,9 @@
         var menu = new Menu();
 
         function updateModel() {
-            if (menu.type === "PBR-MetalRoughness") {
-                alert("Not implemented yet");
-                }
-            else 
-                {
-                load('Models/'+menu.model+'/'+menu.type+'/'+menu.model+'.gltf');
-                }
+            load('Models/'+menu.model+'/'+menu.type+'/'+menu.model+'.gltf');
+            
+            
         
             };
 
