@@ -1,88 +1,120 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <title>BabylonJS glTF Loader</title>
+
+    <style>
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+
     <script src="scripts/dat.gui.min.js"></script>
-    <script src="scripts/babylon.js"></script>
-    <script src="scripts/babylon.glTFFileLoader.js"></script>   
+    <script src="scripts/babylon.max.js"></script>
+    <script src="scripts/babylon.glTFFileLoader.js"></script>
 </head>
-<body>  
+<body>
     <canvas id="renderCanvas"></canvas>
+
     <script>
+        var Options = function () {
+            this.model = "Avocado";
+            this.folder = "2.0";
+            this.binary = false;
+        }
+
+        var options = new Options();
+        var gui = new dat.GUI({ autoplace: false, width: 500 });
+
+        gui.add(options, "model", ["Avocado", "BarramundiFish", "SmilingFace", "telephone"]).onChange(onModelChange);
+        gui.add(options, "folder", ["2.0", "2.0/KHR_materials_pbrSpecularGlossiness"]).onChange(onModelChange);
+        gui.add(options, "binary").onChange(onModelChange);
+
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
-        var activeCamera = null;
-        var cameraAlpha = 0;
-        var cameraBeta = 1;
-        var cameraRadius = 5;
+        var camera = null;
+        var alpha = 4.71238898038469;
+        var beta = 1.5707963267948966;
+        var radius = 5;
 
-        function load(url) {
-            canvas.width = 1000;
-            canvas.height = 800;
+        onModelChange();
 
-            if (activeCamera) {
-                cameraAlpha = activeCamera.alpha;
-                cameraBeta = activeCamera.beta;
-                cameraRadius = activeCamera.radius;
-            } 
-
+        window.addEventListener("resize", function () {
             if (engine) {
+                engine.resize();
+            }
+        });
+
+        function load(rootUrl, fileName) {
+            if (engine) {
+                alpha = camera.alpha;
+                beta = camera.beta;
+                radius = camera.radius;
+
                 engine.dispose();
             }
 
             engine = new BABYLON.Engine(canvas, true);
             engine.enableOfflineSupport = false;
 
-            var split = url.lastIndexOf("/");
-            var rootUrl = url.substring(0, split + 1);
-            var fileName = url.substring(split + 1, url.length);
+            BABYLON.GLTFFileLoader.IncrementalLoading = false;
 
             BABYLON.SceneLoader.ShowLoadingScreen = false;
+
             BABYLON.SceneLoader.Load(rootUrl, fileName, engine, function (scene) {
-                
-                camera = new BABYLON.ArcRotateCamera("camera", cameraAlpha, cameraBeta, cameraRadius, BABYLON.Vector3.Zero(), scene);
-                camera.attachControl(canvas, false, false);
-                camera.panningSensibility = 50.0;
-                camera.angularSensibility = 500;
-                scene.activeCamera = camera;
-                activeCamera = camera;
-                
+                scene.clearColor = new BABYLON.Color3(1, 1, 1);
+                scene.ambientColor = new BABYLON.Color3(0, 0, 0);
 
+                camera = new BABYLON.ArcRotateCamera("camera", alpha, beta, radius, BABYLON.Vector3.Zero(), scene);
+                camera.attachControl(canvas);
+                camera.wheelPrecision = 20.0;
 
-                var light = new BABYLON.DirectionalLight("light1", new BABYLON.Quaternion(0.4082179, -0.2345697, 0.1093817, 0.8754261), scene);
-                light.intensity = 0.7;
+                var hdrTexture = new BABYLON.HDRCubeTexture("images/country.babylon.hdr", scene);
+
+                for (var i = 0; i < scene.meshes.length; i++) {
+                    var material = scene.meshes[i].material;
+                    if (material instanceof BABYLON.MultiMaterial) {
+                        for (var j = 0; j < material.subMaterials.length; j++) {
+                            var subMaterial = material.subMaterials[j];
+                            if (subMaterial instanceof BABYLON.PBRMaterial) {
+                                subMaterial.reflectionTexture = hdrTexture;
+                            }
+                        }
+                    }
+                }
+
+                var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
+                var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
+                hdrSkyboxMaterial.backFaceCulling = false;
+                hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
+                hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+                hdrSkyboxMaterial.microSurface = 1.0;
+                hdrSkyboxMaterial.cameraExposure = 0.6;
+                hdrSkyboxMaterial.cameraContrast = 1.6;
+                hdrSkyboxMaterial.disableLighting = true;
+                hdrSkybox.material = hdrSkyboxMaterial;
+                hdrSkybox.infiniteDistance = true;
 
                 engine.runRenderLoop(function () {
                     scene.render();
                 });
             });
         }
-        
 
-        var Menu = function(){
-            this.model = "Telephone";
-            this.type = "PBR-SpecGloss";
+        function onModelChange() {
+            var extension = options.binary ? ".glb" : ".gltf";
+            load("models/" + options.folder + "/", options.model + extension);
         }
-
-        var menu = new Menu();
-
-        function updateModel() {
-            load('Models/'+menu.model+'/'+menu.type+'/'+menu.model+'.gltf');
-            
-            
-        
-            };
-
-        
-        window.onload = function() {
-                var gui = new dat.GUI();
-                var model = gui.add(menu, 'model', ['Telephone','Avocado','BarramundiFish','FarmLandDiorama']);
-                var type = gui.add(menu,'type',['PBR-SpecGloss','PBR-MetalRoughness','glTF']); 
-               
-                model.onFinishChange(updateModel);
-                type.onFinishChange(updateModel);
-                load('Models/Telephone/PBR-SpecGloss/Telephone.gltf');
-        }
-
     </script>
 </body>
 </html>
