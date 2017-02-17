@@ -36,7 +36,16 @@
         var options = new Options();
         var gui = new dat.GUI({ autoplace: false, width: 500 });
 
-        gui.add(options, "model", ["Avocado", "BarramundiFish", "SmilingFace", "telephone"]).onChange(onModelChange);
+        gui.add(options, "model", [
+            "Avocado",
+            "BarramundiFish",
+            "BoomBox",
+            "Corset",
+            "Latern",
+            "SmilingFace",
+            "Telephone"
+        ]).onChange(onModelChange);
+
         gui.add(options, "folder", ["2.0", "2.0/KHR_materials_pbrSpecularGlossiness"]).onChange(onModelChange);
         gui.add(options, "binary").onChange(onModelChange);
 
