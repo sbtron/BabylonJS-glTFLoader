@@ -662,9 +662,9 @@ var BABYLON;
         }
     };
     /**
-    * Configures node from transformation matrix
+    * Configures node transformation
     */
-    var configureNodeFromMatrix = function (newNode, node, parent) {
+    var configureNodeFromGLTFNode = function (newNode, node, parent) {
         if (node.matrix) {
             var position = new BABYLON.Vector3(0, 0, 0);
             var rotation = new BABYLON.Quaternion();
@@ -675,7 +675,7 @@ var BABYLON;
             newNode.computeWorldMatrix(true);
         }
         else {
-            configureNode(newNode, BABYLON.Vector3.FromArray(node.translation), BABYLON.Quaternion.FromArray(node.rotation), BABYLON.Vector3.FromArray(node.scale));
+            configureNode(newNode, BABYLON.Vector3.FromArray(node.translation || [0, 0, 0]), BABYLON.Quaternion.FromArray(node.rotation || [0, 0, 0, 1]), BABYLON.Vector3.FromArray(node.scale || [1, 1, 1]));
         }
     };
     /**
@@ -733,8 +733,8 @@ var BABYLON;
             }
         }
         if (babylonNode !== null) {
-            if (node.matrix && babylonNode instanceof BABYLON.Mesh) {
-                configureNodeFromMatrix(babylonNode, node, parent);
+            if (babylonNode instanceof BABYLON.Mesh) {
+                configureNodeFromGLTFNode(babylonNode, node, parent);
             }
             else {
                 var translation = node.translation || [0, 0, 0];

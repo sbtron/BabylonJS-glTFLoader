@@ -29,12 +29,11 @@
     <script>
         var Options = function () {
             this.model = "Avocado";
-            this.folder = "2.0";
-            this.binary = false;
+            this.folder = "glTF";
         }
 
         var options = new Options();
-        var gui = new dat.GUI({ autoplace: false, width: 500 });
+        var gui = new dat.GUI({ autoplace: false, width: 400 });
 
         gui.add(options, "model", [
             "Avocado",
@@ -46,8 +45,7 @@
             "Telephone"
         ]).onChange(onModelChange);
 
-        gui.add(options, "folder", ["2.0", "2.0/KHR_materials_pbrSpecularGlossiness"]).onChange(onModelChange);
-        gui.add(options, "binary").onChange(onModelChange);
+        gui.add(options, "folder", ["glTF", "glTF-Binary", "glTF-pbrSpecularGlossiness"]).onChange(onModelChange);
 
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
@@ -86,7 +84,7 @@
 
                 camera = new BABYLON.ArcRotateCamera("camera", alpha, beta, radius, BABYLON.Vector3.Zero(), scene);
                 camera.attachControl(canvas);
-                camera.wheelPrecision = 20.0;
+                camera.wheelPrecision = 100.0;
 
                 var hdrTexture = new BABYLON.HDRCubeTexture("images/country.babylon.hdr", scene);
 
@@ -121,8 +119,8 @@
         }
 
         function onModelChange() {
-            var extension = options.binary ? ".glb" : ".gltf";
-            load("models/" + options.folder + "/", options.model + extension);
+            var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
+            load("models/2.0/" + options.model + "/" + options.folder + "/", options.model + extension);
         }
     </script>
 </body>
