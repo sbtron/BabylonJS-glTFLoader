@@ -28,24 +28,40 @@
 
     <script>
         var Options = function () {
-            this.model = "Avocado";
+            this.model = "AppleTree";
             this.folder = "glTF";
         }
 
         var options = new Options();
+
+        var parameters = location.href.split("?")[1];
+        if (parameters) {
+            var parameter = parameters.split("=");
+            if (parameter[0] == "model" && parameter[1]) {
+                this.options.model = parameter[1];
+            }
+        }
+
         var gui = new dat.GUI({ autoplace: false, width: 400 });
 
         gui.add(options, "model", [
+            "AppleTree",
             "Avocado",
             "BarramundiFish",
             "BoomBox",
             "Corset",
+            "FarmLandDiorama",
+            "Hourglass",
             "Lantern",
             "SmilingFace",
             "Telephone"
         ]).onChange(onModelChange);
 
-        gui.add(options, "folder", ["glTF", "glTF-Binary", "glTF-pbrSpecularGlossiness"]).onChange(onModelChange);
+        gui.add(options, "folder", [
+            "glTF",
+            "glTF-Binary",
+            "glTF-pbrSpecularGlossiness"
+        ]).onChange(onModelChange);
 
         var canvas = document.getElementById("renderCanvas");
         var engine = null;

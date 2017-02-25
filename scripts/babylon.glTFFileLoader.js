@@ -94,6 +94,11 @@ var BABYLON;
         ETextureWrapMode[ETextureWrapMode["MIRRORED_REPEAT"] = 33648] = "MIRRORED_REPEAT";
         ETextureWrapMode[ETextureWrapMode["REPEAT"] = 10497] = "REPEAT";
     })(ETextureWrapMode = BABYLON.ETextureWrapMode || (BABYLON.ETextureWrapMode = {}));
+    var EMaterialAlphaMode;
+    (function (EMaterialAlphaMode) {
+        EMaterialAlphaMode[EMaterialAlphaMode["MASK"] = 0] = "MASK";
+        EMaterialAlphaMode[EMaterialAlphaMode["BLEND"] = 1] = "BLEND";
+    })(EMaterialAlphaMode = BABYLON.EMaterialAlphaMode || (BABYLON.EMaterialAlphaMode = {}));
 })(BABYLON || (BABYLON = {}));
 
 //# sourceMappingURL=babylon.glTFFileLoaderInterfaces.js.map
@@ -886,6 +891,23 @@ var BABYLON;
                 }, function () { return BABYLON.Tools.Warn("Failed to load normal texture"); });
             }
         };
+        GLTFFileLoader.LoadAlphaProperties = function (runtime, material) {
+            if (material.alphaMode) {
+                material.babylonMaterial.albedoTexture.hasAlpha = true;
+                switch (material.alphaMode) {
+                    case "MASK":
+                        material.babylonMaterial.useAlphaFromAlbedoTexture = false;
+                        material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_DISABLE;
+                        break;
+                    case "BLEND":
+                        material.babylonMaterial.useAlphaFromAlbedoTexture = true;
+                        material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+                        break;
+                    default:
+                        BABYLON.Tools.Error("Invalid alpha mode '" + material.alphaMode + "'");
+                }
+            }
+        };
         GLTFFileLoader.LoadTextureAsync = function (runtime, textureInfo, onSuccess, onError) {
             var texture = runtime.gltf.textures[textureInfo.index];
             if (!texture || texture.source === undefined || texture.sampler === undefined) {
@@ -1130,6 +1152,7 @@ var BABYLON;
         if (properties.baseColorTexture) {
             GLTFFileLoader.LoadTextureAsync(runtime, properties.baseColorTexture, function (texture) {
                 material.babylonMaterial.albedoTexture = texture;
+                GLTFFileLoader.LoadAlphaProperties(runtime, material);
             }, function () {
                 BABYLON.Tools.Warn("Failed to load base color texture");
             });
@@ -1470,6 +1493,7 @@ var BABYLON;
             if (properties.diffuseTexture) {
                 BABYLON.GLTFFileLoader.LoadTextureAsync(runtime, properties.diffuseTexture, function (texture) {
                     material.babylonMaterial.albedoTexture = texture;
+                    BABYLON.GLTFFileLoader.LoadAlphaProperties(runtime, material);
                 }, function () {
                     BABYLON.Tools.Warn("Failed to load diffuse texture");
                 });
