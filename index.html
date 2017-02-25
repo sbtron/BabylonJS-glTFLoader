@@ -101,6 +101,8 @@
                 camera = new BABYLON.ArcRotateCamera("camera", alpha, beta, radius, BABYLON.Vector3.Zero(), scene);
                 camera.attachControl(canvas);
                 camera.wheelPrecision = 100.0;
+                camera.minZ = 0.1;
+                camera.maxZ = 1000;
 
                 var hdrTexture = new BABYLON.HDRCubeTexture("images/country.babylon.hdr", scene);
 
