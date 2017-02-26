@@ -4,10 +4,6 @@ var BABYLON;
     /**
     * Enums
     */
-    var EBinaryContentFormat;
-    (function (EBinaryContentFormat) {
-        EBinaryContentFormat[EBinaryContentFormat["JSON"] = 0] = "JSON";
-    })(EBinaryContentFormat = BABYLON.EBinaryContentFormat || (BABYLON.EBinaryContentFormat = {}));
     var EBufferViewTarget;
     (function (EBufferViewTarget) {
         EBufferViewTarget[EBufferViewTarget["ARRAY_BUFFER"] = 34962] = "ARRAY_BUFFER";
@@ -94,11 +90,6 @@ var BABYLON;
         ETextureWrapMode[ETextureWrapMode["MIRRORED_REPEAT"] = 33648] = "MIRRORED_REPEAT";
         ETextureWrapMode[ETextureWrapMode["REPEAT"] = 10497] = "REPEAT";
     })(ETextureWrapMode = BABYLON.ETextureWrapMode || (BABYLON.ETextureWrapMode = {}));
-    var EMaterialAlphaMode;
-    (function (EMaterialAlphaMode) {
-        EMaterialAlphaMode[EMaterialAlphaMode["MASK"] = 0] = "MASK";
-        EMaterialAlphaMode[EMaterialAlphaMode["BLEND"] = 1] = "BLEND";
-    })(EMaterialAlphaMode = BABYLON.EMaterialAlphaMode || (BABYLON.EMaterialAlphaMode = {}));
 })(BABYLON || (BABYLON = {}));
 
 //# sourceMappingURL=babylon.glTFFileLoaderInterfaces.js.map
@@ -835,6 +826,9 @@ var BABYLON;
             this._byteOffset += length;
             return value;
         };
+        BinaryReader.prototype.skipBytes = function (length) {
+            this._byteOffset += length;
+        };
         return BinaryReader;
     }());
     /**
@@ -1092,40 +1086,65 @@ var BABYLON;
             return runtime;
         };
         GLTFFileLoader.prototype._parseBinary = function (runtime, data) {
+            var Binary = {
+                Magic: 0x46546C67,
+                Version: 2,
+                ChunkFormat: {
+                    JSON: 0x4E4F534A,
+                    BIN: 0x004E4942
+                }
+            };
             var binaryReader = new BinaryReader(data);
-            var magic = BABYLON.GLTFUtils.DecodeBufferToText(binaryReader.readUint8Array(4));
-            if (magic != "glTF") {
+            var magic = binaryReader.readUint32();
+            if (magic !== Binary.Magic) {
                 BABYLON.Tools.Error("Unexpected magic: " + magic);
                 return false;
             }
             var version = binaryReader.readUint32();
-            if (version != 1) {
+            if (version !== Binary.Version) {
                 BABYLON.Tools.Error("Unsupported version: " + version);
                 return false;
             }
             var length = binaryReader.readUint32();
-            if (length != data.byteLength) {
+            if (length !== data.byteLength) {
                 BABYLON.Tools.Error("Length in header does not match actual data length: " + length + " != " + data.byteLength);
                 return false;
             }
-            var contentLength = binaryReader.readUint32();
-            var contentFormat = binaryReader.readUint32();
-            switch (contentFormat) {
-                case BABYLON.EBinaryContentFormat.JSON:
-                    var jsonText = BABYLON.GLTFUtils.DecodeBufferToText(binaryReader.readUint8Array(contentLength));
-                    runtime.gltf = JSON.parse(jsonText);
-                    break;
-                default:
-                    BABYLON.Tools.Error("Unexpected content format: " + contentFormat);
-                    return false;
+            var chunkLength = binaryReader.readUint32();
+            var chunkFormat = binaryReader.readUint32();
+            if (chunkFormat !== Binary.ChunkFormat.JSON) {
+                BABYLON.Tools.Error("First chunk format is not JSON");
+                return false;
             }
+            var jsonText = BABYLON.GLTFUtils.DecodeBufferToText(binaryReader.readUint8Array(chunkLength));
+            runtime.gltf = JSON.parse(jsonText);
+            var binaryBuffer;
             var buffers = runtime.gltf.buffers;
             if (buffers.length > 0 && buffers[0].uri === undefined) {
-                buffers[0].loadedBufferView = binaryReader.readUint8Array(buffers[0].byteLength);
+                binaryBuffer = buffers[0];
             }
-            if (binaryReader.getPosition() < binaryReader.getLength()) {
-                BABYLON.Tools.Error("Unexpected extra bytes at end of data");
-                return false;
+            while (binaryReader.getPosition() < binaryReader.getLength()) {
+                chunkLength = binaryReader.readUint32();
+                chunkFormat = binaryReader.readUint32();
+                if (chunkFormat === Binary.ChunkFormat.JSON) {
+                    BABYLON.Tools.Error("Unexpected JSON chunk");
+                    return false;
+                }
+                if (chunkFormat === Binary.ChunkFormat.BIN) {
+                    if (!binaryBuffer) {
+                        BABYLON.Tools.Error("Unexpected BIN chunk");
+                        return false;
+                    }
+                    if (binaryBuffer.byteLength != chunkLength) {
+                        BABYLON.Tools.Error("Binary buffer length from JSON does not match chunk length");
+                        return false;
+                    }
+                    binaryBuffer.loadedBufferView = binaryReader.readUint8Array(chunkLength);
+                }
+                else {
+                    // ignore unrecognized chunkFormat
+                    binaryReader.skipBytes(chunkLength);
+                }
             }
             return true;
         };
