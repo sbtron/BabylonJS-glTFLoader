@@ -68,6 +68,8 @@
         gui.add(options, "background", [
             "country",
             "wobblyBridge",
+            "hill",
+            "woods"
         ]).onChange(onModelChange);
 
         gui.add(options, "attribution").listen();
@@ -146,24 +148,30 @@
         }
 
         function onModelChange() {
-            var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
+            var modelExtension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
+            var backgroundExtension = "";
 
             // maps to attribution for image files here per cc license guidelines
             // first element must match background name in gui menu
             var imageSources = {
-                "country": "",
-                "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle"
+                "country": " ",
+                "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
+                "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
+                "woods": "https://hdrihaven.com/bundle.php?b=free_bundle"
             };
 
             if (imageSources[options.background]) {
                 options.attribution = imageSources[options.background];
             }
+            else {
+                options.attribution = " ";
+            }
 
             load("models/2.0/" + options.model + "/" + options.folder + "/",
-                  options.model + extension,
+                  options.model + modelExtension,
                   "images/" + options.background + ".babylon.hdr"); 
         }
-        
+
     </script>
 </body>
 </html>
