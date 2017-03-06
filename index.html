@@ -30,6 +30,8 @@
         var Options = function () {
             this.model = "AppleTree";
             this.folder = "glTF";
+            this.background = "country";
+            this.attribution = "";
         }
 
         var options = new Options();
@@ -63,6 +65,15 @@
             "glTF-pbrSpecularGlossiness"
         ]).onChange(onModelChange);
 
+        gui.add(options, "background", [
+            "country",
+            "wobblyBridge",
+            "hill",
+            "woods"
+        ]).onChange(onModelChange);
+
+        gui.add(options, "attribution").listen();
+
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
         var camera = null;
@@ -78,7 +89,7 @@
             }
         });
 
-        function load(rootUrl, fileName) {
+        function load(rootUrl, fileName, backgroundFileName) {
             if (engine) {
                 alpha = camera.alpha;
                 beta = camera.beta;
@@ -104,7 +115,7 @@
                 camera.minZ = 0.1;
                 camera.maxZ = 1000;
 
-                var hdrTexture = new BABYLON.HDRCubeTexture("images/country.babylon.hdr", scene);
+                var hdrTexture = new BABYLON.HDRCubeTexture(backgroundFileName, scene);
 
                 for (var i = 0; i < scene.meshes.length; i++) {
                     var material = scene.meshes[i].material;
@@ -137,9 +148,30 @@
         }
 
         function onModelChange() {
-            var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
-            load("models/2.0/" + options.model + "/" + options.folder + "/", options.model + extension);
+            var modelExtension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
+            var backgroundExtension = "";
+
+            // maps to attribution for image files here per cc license guidelines
+            // first element must match background name in gui menu
+            var imageSources = {
+                "country": " ",
+                "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
+                "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
+                "woods": "https://hdrihaven.com/bundle.php?b=free_bundle"
+            };
+
+            if (imageSources[options.background]) {
+                options.attribution = imageSources[options.background];
+            }
+            else {
+                options.attribution = " ";
+            }
+
+            load("models/2.0/" + options.model + "/" + options.folder + "/",
+                  options.model + modelExtension,
+                  "images/" + options.background + ".babylon.hdr"); 
         }
+
     </script>
 </body>
 </html>
