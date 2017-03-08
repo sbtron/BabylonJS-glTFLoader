@@ -69,7 +69,9 @@
             "country",
             "wobblyBridge",
             "hill",
-            "woods"
+            "woods",
+            "theater",
+            "darkPark"
         ]).onChange(onModelChange);
 
         gui.add(options, "attribution").listen();
@@ -154,10 +156,12 @@
             // maps to attribution for image files here per cc license guidelines
             // first element must match background name in gui menu
             var imageSources = {
-                "country": " ",
+                "country": "http://www.openfootage.net/",
                 "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
                 "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
-                "woods": "https://hdrihaven.com/bundle.php?b=free_bundle"
+                "woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
+                "theater": "http://www.hdrlabs.com/",
+                "darkPark": "http://noemotionhdrs.net/"
             };
 
             if (imageSources[options.background]) {
