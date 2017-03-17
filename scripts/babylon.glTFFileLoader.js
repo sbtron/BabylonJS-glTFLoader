@@ -583,6 +583,10 @@ var BABYLON;
                     }
                     verticesCounts.push(tempVertexData.positions.length);
                 }
+                else if (semantic === "TANGENT") {
+                    tempVertexData.tangents = new Float32Array(buffer.length);
+                    tempVertexData.tangents.set(buffer);
+                }
                 else if (semantic.indexOf("TEXCOORD_") !== -1) {
                     var channel = Number(semantic.split("_")[1]);
                     var uvKind = BABYLON.VertexBuffer.UVKind + (channel === 0 ? "" : (channel + 1));

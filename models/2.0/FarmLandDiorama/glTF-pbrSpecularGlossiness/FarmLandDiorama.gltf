@@ -37,6 +37,25 @@
       "byteOffset": 0,
       "componentType": 5126,
       "count": 916,
+      "type": "VEC4",
+      "max": [
+        0.6784959,
+        0.9999993,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.911498666,
+        -1.0,
+        -0.1277864,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 916,
       "type": "VEC3",
       "max": [
         0.466963351,
@@ -50,7 +69,7 @@
       ]
     },
     {
-      "bufferView": 3,
+      "bufferView": 4,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 4620,
@@ -63,7 +82,7 @@
       ]
     },
     {
-      "bufferView": 4,
+      "bufferView": 5,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 1878,
@@ -78,7 +97,7 @@
       ]
     },
     {
-      "bufferView": 5,
+      "bufferView": 6,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 1878,
@@ -95,7 +114,26 @@
       ]
     },
     {
-      "bufferView": 6,
+      "bufferView": 7,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 1878,
+      "type": "VEC4",
+      "max": [
+        0.988313556,
+        1.0,
+        0.9995652,
+        1.0
+      ],
+      "min": [
+        -0.9871122,
+        -1.0,
+        -0.997503936,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 8,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 1878,
@@ -112,7 +150,7 @@
       ]
     },
     {
-      "bufferView": 7,
+      "bufferView": 9,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 3336,
@@ -125,7 +163,7 @@
       ]
     },
     {
-      "bufferView": 8,
+      "bufferView": 10,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 963,
@@ -140,7 +178,7 @@
       ]
     },
     {
-      "bufferView": 9,
+      "bufferView": 11,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 963,
@@ -157,7 +195,26 @@
       ]
     },
     {
-      "bufferView": 10,
+      "bufferView": 12,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 963,
+      "type": "VEC4",
+      "max": [
+        0.999652743,
+        1.0,
+        0.9995666,
+        1.0
+      ],
+      "min": [
+        -0.9998684,
+        -0.990247667,
+        -0.9985072,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 13,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 963,
@@ -174,7 +231,7 @@
       ]
     },
     {
-      "bufferView": 11,
+      "bufferView": 14,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 3771,
@@ -187,7 +244,7 @@
       ]
     },
     {
-      "bufferView": 12,
+      "bufferView": 15,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4740,
@@ -202,7 +259,7 @@
       ]
     },
     {
-      "bufferView": 13,
+      "bufferView": 16,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4740,
@@ -219,7 +276,26 @@
       ]
     },
     {
-      "bufferView": 14,
+      "bufferView": 17,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4740,
+      "type": "VEC4",
+      "max": [
+        0.999748051,
+        1.0,
+        0.9981705,
+        1.0
+      ],
+      "min": [
+        -0.999581158,
+        -1.0,
+        -0.999923348,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 18,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4740,
@@ -236,7 +312,7 @@
       ]
     },
     {
-      "bufferView": 15,
+      "bufferView": 19,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 7590,
@@ -249,7 +325,7 @@
       ]
     },
     {
-      "bufferView": 16,
+      "bufferView": 20,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4731,
@@ -264,7 +340,7 @@
       ]
     },
     {
-      "bufferView": 17,
+      "bufferView": 21,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4731,
@@ -281,7 +357,26 @@
       ]
     },
     {
-      "bufferView": 18,
+      "bufferView": 22,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 4731,
+      "type": "VEC4",
+      "max": [
+        0.9990951,
+        0.9994037,
+        0.9999826,
+        1.0
+      ],
+      "min": [
+        -0.999752,
+        -0.9911129,
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 23,
       "byteOffset": 0,
       "componentType": 5126,
       "count": 4731,
@@ -298,7 +393,7 @@
       ]
     },
     {
-      "bufferView": 19,
+      "bufferView": 24,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 11583,
@@ -319,128 +414,133 @@
     {
       "buffer": 0,
       "byteOffset": 0,
-      "byteLength": 7328,
-      "target": 34962
+      "byteLength": 7328
     },
     {
       "buffer": 0,
       "byteOffset": 7328,
-      "byteLength": 10992,
-      "target": 34962
+      "byteLength": 10992
     },
     {
       "buffer": 0,
       "byteOffset": 18320,
-      "byteLength": 10992,
-      "target": 34962
+      "byteLength": 14656
     },
     {
       "buffer": 0,
-      "byteOffset": 29312,
-      "byteLength": 9240,
-      "target": 34963
+      "byteOffset": 32976,
+      "byteLength": 10992
     },
     {
       "buffer": 0,
-      "byteOffset": 38552,
-      "byteLength": 15024,
-      "target": 34962
+      "byteOffset": 43968,
+      "byteLength": 9240
     },
     {
       "buffer": 0,
-      "byteOffset": 53576,
-      "byteLength": 22536,
-      "target": 34962
+      "byteOffset": 53208,
+      "byteLength": 15024
     },
     {
       "buffer": 0,
-      "byteOffset": 76112,
-      "byteLength": 22536,
-      "target": 34962
+      "byteOffset": 68232,
+      "byteLength": 22536
     },
     {
       "buffer": 0,
-      "byteOffset": 98648,
-      "byteLength": 6672,
-      "target": 34963
+      "byteOffset": 90768,
+      "byteLength": 30048
     },
     {
       "buffer": 0,
-      "byteOffset": 105320,
-      "byteLength": 7704,
-      "target": 34962
+      "byteOffset": 120816,
+      "byteLength": 22536
     },
     {
       "buffer": 0,
-      "byteOffset": 113024,
-      "byteLength": 11556,
-      "target": 34962
+      "byteOffset": 143352,
+      "byteLength": 6672
     },
     {
       "buffer": 0,
-      "byteOffset": 124580,
-      "byteLength": 11556,
-      "target": 34962
+      "byteOffset": 150024,
+      "byteLength": 7704
     },
     {
       "buffer": 0,
-      "byteOffset": 136136,
-      "byteLength": 7542,
-      "target": 34963
+      "byteOffset": 157728,
+      "byteLength": 11556
     },
     {
       "buffer": 0,
-      "byteOffset": 143680,
-      "byteLength": 37920,
-      "target": 34962
+      "byteOffset": 169284,
+      "byteLength": 15408
     },
     {
       "buffer": 0,
-      "byteOffset": 181600,
-      "byteLength": 56880,
-      "target": 34962
+      "byteOffset": 184692,
+      "byteLength": 11556
     },
     {
       "buffer": 0,
-      "byteOffset": 238480,
-      "byteLength": 56880,
-      "target": 34962
+      "byteOffset": 196248,
+      "byteLength": 7542
     },
     {
       "buffer": 0,
-      "byteOffset": 295360,
-      "byteLength": 15180,
-      "target": 34963
+      "byteOffset": 203792,
+      "byteLength": 37920
     },
     {
       "buffer": 0,
-      "byteOffset": 310540,
-      "byteLength": 37848,
-      "target": 34962
+      "byteOffset": 241712,
+      "byteLength": 56880
     },
     {
       "buffer": 0,
-      "byteOffset": 348388,
-      "byteLength": 56772,
-      "target": 34962
+      "byteOffset": 298592,
+      "byteLength": 75840
     },
     {
       "buffer": 0,
-      "byteOffset": 405160,
-      "byteLength": 56772,
-      "target": 34962
+      "byteOffset": 374432,
+      "byteLength": 56880
     },
     {
       "buffer": 0,
-      "byteOffset": 461932,
-      "byteLength": 23166,
-      "target": 34963
+      "byteOffset": 431312,
+      "byteLength": 15180
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 446492,
+      "byteLength": 37848
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 484340,
+      "byteLength": 56772
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 541112,
+      "byteLength": 75696
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 616808,
+      "byteLength": 56772
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 673580,
+      "byteLength": 23166
     }
   ],
   "buffers": [
     {
       "uri": "FarmLandDiorama.bin",
-      "byteLength": 485098
+      "byteLength": 696746
     }
   ],
   "extensionsUsed": [
@@ -493,6 +593,9 @@
       "uri": "FarmLandDiorama_normal2.png"
     },
     {
+      "uri": "FarmLandDiorama_occlusion2.png"
+    },
+    {
       "uri": "FarmLandDiorama_diffuse2.png"
     },
     {
@@ -539,9 +642,10 @@
           "attributes": {
             "TEXCOORD_0": 0,
             "NORMAL": 1,
-            "POSITION": 2
+            "TANGENT": 2,
+            "POSITION": 3
           },
-          "indices": 3,
+          "indices": 4,
           "material": 0,
           "mode": 4
         }
@@ -552,11 +656,12 @@
       "primitives": [
         {
           "attributes": {
-            "TEXCOORD_0": 4,
-            "NORMAL": 5,
-            "POSITION": 6
+            "TEXCOORD_0": 5,
+            "NORMAL": 6,
+            "TANGENT": 7,
+            "POSITION": 8
           },
-          "indices": 7,
+          "indices": 9,
           "material": 1,
           "mode": 4
         }
@@ -567,11 +672,12 @@
       "primitives": [
         {
           "attributes": {
-            "TEXCOORD_0": 8,
-            "NORMAL": 9,
-            "POSITION": 10
+            "TEXCOORD_0": 10,
+            "NORMAL": 11,
+            "TANGENT": 12,
+            "POSITION": 13
           },
-          "indices": 11,
+          "indices": 14,
           "material": 2,
           "mode": 4
         }
@@ -582,11 +688,12 @@
       "primitives": [
         {
           "attributes": {
-            "TEXCOORD_0": 12,
-            "NORMAL": 13,
-            "POSITION": 14
+            "TEXCOORD_0": 15,
+            "NORMAL": 16,
+            "TANGENT": 17,
+            "POSITION": 18
           },
-          "indices": 15,
+          "indices": 19,
           "material": 3,
           "mode": 4
         }
@@ -597,11 +704,12 @@
       "primitives": [
         {
           "attributes": {
-            "TEXCOORD_0": 16,
-            "NORMAL": 17,
-            "POSITION": 18
+            "TEXCOORD_0": 20,
+            "NORMAL": 21,
+            "TANGENT": 22,
+            "POSITION": 23
           },
-          "indices": 19,
+          "indices": 24,
           "material": 4,
           "mode": 4
         }
@@ -677,16 +785,16 @@
         "index": 14
       },
       "occlusionTexture": {
-        "index": 9
+        "index": 15
       },
       "name": "7285_farm land diorama_c_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {
           "diffuseTexture": {
-            "index": 15
+            "index": 16
           },
           "specularGlossinessTexture": {
-            "index": 16
+            "index": 17
           }
         }
       }
@@ -694,24 +802,24 @@
     {
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 17
+          "index": 18
         },
         "metallicRoughnessTexture": {
-          "index": 18
+          "index": 19
         }
       },
       "normalTexture": {
-        "index": 19
+        "index": 20
       },
-      "alphaMode": "BLEND",
+      "alphaMode": "MASK",
       "name": "7285_farm land diorama_d_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {
           "diffuseTexture": {
-            "index": 20
+            "index": 21
           },
           "specularGlossinessTexture": {
-            "index": 21
+            "index": 22
           }
         }
       }
@@ -719,27 +827,27 @@
     {
       "pbrMetallicRoughness": {
         "baseColorTexture": {
-          "index": 22
+          "index": 23
         },
         "metallicRoughnessTexture": {
-          "index": 23
+          "index": 24
         }
       },
       "normalTexture": {
-        "index": 24
+        "index": 25
       },
       "occlusionTexture": {
-        "index": 25
+        "index": 26
       },
       "alphaMode": "MASK",
       "name": "7285_farm land diorama_e_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {
           "diffuseTexture": {
-            "index": 26
+            "index": 27
           },
           "specularGlossinessTexture": {
-            "index": 27
+            "index": 28
           }
         }
       }
@@ -940,6 +1048,10 @@
     {
       "sampler": 0,
       "source": 27
+    },
+    {
+      "sampler": 0,
+      "source": 28
     }
   ]
 }

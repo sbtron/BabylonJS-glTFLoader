@@ -37,6 +37,25 @@
       "byteOffset": 0,
       "componentType": 5126,
       "count": 2711,
+      "type": "VEC4",
+      "max": [
+        0.999956131,
+        0.9999571,
+        0.999797165,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.691328,
+        -0.999797165,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2711,
       "type": "VEC3",
       "max": [
         0.008106791,
@@ -50,7 +69,7 @@
       ]
     },
     {
-      "bufferView": 3,
+      "bufferView": 4,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 14610,
@@ -71,32 +90,33 @@
     {
       "buffer": 0,
       "byteOffset": 0,
-      "byteLength": 21688,
-      "target": 34962
+      "byteLength": 21688
     },
     {
       "buffer": 0,
       "byteOffset": 21688,
-      "byteLength": 32532,
-      "target": 34962
+      "byteLength": 32532
     },
     {
       "buffer": 0,
       "byteOffset": 54220,
-      "byteLength": 32532,
-      "target": 34962
+      "byteLength": 43376
     },
     {
       "buffer": 0,
-      "byteOffset": 86752,
-      "byteLength": 29220,
-      "target": 34963
+      "byteOffset": 97596,
+      "byteLength": 32532
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 130128,
+      "byteLength": 29220
     }
   ],
   "buffers": [
     {
       "uri": "SmilingFace.bin",
-      "byteLength": 115972
+      "byteLength": 159348
     }
   ],
   "extensionsUsed": [
@@ -123,9 +143,10 @@
           "attributes": {
             "TEXCOORD_0": 0,
             "NORMAL": 1,
-            "POSITION": 2
+            "TANGENT": 2,
+            "POSITION": 3
           },
-          "indices": 3,
+          "indices": 4,
           "material": 0,
           "mode": 4
         }

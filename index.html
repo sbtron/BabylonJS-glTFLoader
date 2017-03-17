@@ -1,4 +1,3 @@
-﻿<!DOCTYPE html>
 <html>
 <head>
     <title>BabylonJS glTF Loader</title>
@@ -22,25 +21,45 @@
     <script src="scripts/dat.gui.min.js"></script>
     <script src="scripts/babylon.max.js"></script>
     <script src="scripts/babylon.glTFFileLoader.js"></script>
+    <script src="index.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
-
     <script>
         var Options = function () {
-            this.model = "AppleTree";
+            this.model = "Avocado";
             this.folder = "glTF";
-            this.background = "country";
+            this.environment = "country";
             this.attribution = "";
+            this.pointLight = false;
+            this.pointLightAngle = 0;
+            this.showTangentSpace = false;
         }
 
         var options = new Options();
 
         var parameters = location.href.split("?")[1];
         if (parameters) {
-            var parameter = parameters.split("=");
-            if (parameter[0] == "model" && parameter[1]) {
-                this.options.model = parameter[1];
+            parameters = parameters.split("&");
+            for (var i = 0; i < parameters.length; i++) {
+                var parameter = parameters[i].split("=");
+                switch (parameter[0]) {
+                    case "model":
+                        this.options.model = parameter[1];
+                        break;
+                    case "folder":
+                        this.options.folder = parameter[1];
+                        break;
+                    case "environment":
+                        this.options.environment = parameter[1];
+                        break;
+                    case "pointLight":
+                        this.options.pointLight = (parameter[1] == "true");
+                        break;
+                    case "showTangentSpace":
+                        this.options.showTangentSpace = (parameter[1] == "true");
+                        break;
+                }
             }
         }
 
@@ -52,29 +71,40 @@
             "BarramundiFish",
             "BoomBox",
             "Corset",
+            "DamagedHelmet",
             "FarmLandDiorama",
             "Hourglass",
             "Lantern",
+            "PillowPlane",
             "SmilingFace",
-            "Telephone"
-        ]).onChange(onModelChange);
+            "Telephone",
+            "WaterBottle"
+        ]).onChange(loadScene);
 
         gui.add(options, "folder", [
             "glTF",
             "glTF-Binary",
-            "glTF-pbrSpecularGlossiness"
-        ]).onChange(onModelChange);
+            "glTF-pbrSpecularGlossiness",
+        ]).onChange(loadScene);
 
-        gui.add(options, "background", [
-            "country",
-            "wobblyBridge",
-            "hill",
-            "woods",
-            "theater",
-            "darkPark"
-        ]).onChange(onModelChange);
+        // maps to attribution for image files here per cc license guidelines
+        // first element must match background name in gui menu
+        var environments = {
+            "country": "http://www.openfootage.net/",
+            "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
+            "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
+            "woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
+            "theater": "http://www.hdrlabs.com/",
+            "darkPark": "http://noemotionhdrs.net/"
+        };
 
+        gui.add(options, "environment", Object.keys(environments)).onChange(loadScene);
         gui.add(options, "attribution").listen();
+
+        gui.add(options, "pointLight").onChange(loadScene);
+        gui.add(options, "pointLightAngle", 0, 360, 0.01).onChange(updateLightPosition);
+
+        gui.add(options, "showTangentSpace").onChange(loadScene);
 
         var canvas = document.getElementById("renderCanvas");
         var engine = null;
@@ -83,99 +113,13 @@
         var beta = 1.5707963267948966;
         var radius = 3;
 
-        onModelChange();
+        loadScene();
 
         window.addEventListener("resize", function () {
             if (engine) {
                 engine.resize();
             }
         });
-
-        function load(rootUrl, fileName, backgroundFileName) {
-            if (engine) {
-                alpha = camera.alpha;
-                beta = camera.beta;
-                radius = camera.radius;
-
-                engine.dispose();
-            }
-
-            engine = new BABYLON.Engine(canvas, true);
-            engine.enableOfflineSupport = false;
-
-            BABYLON.GLTFFileLoader.IncrementalLoading = false;
-
-            BABYLON.SceneLoader.ShowLoadingScreen = false;
-
-            BABYLON.SceneLoader.Load(rootUrl, fileName, engine, function (scene) {
-                scene.clearColor = new BABYLON.Color3(1, 1, 1);
-                scene.ambientColor = new BABYLON.Color3(0, 0, 0);
-
-                camera = new BABYLON.ArcRotateCamera("camera", alpha, beta, radius, BABYLON.Vector3.Zero(), scene);
-                camera.attachControl(canvas);
-                camera.wheelPrecision = 100.0;
-                camera.minZ = 0.1;
-                camera.maxZ = 1000;
-
-                var hdrTexture = new BABYLON.HDRCubeTexture(backgroundFileName, scene);
-
-                for (var i = 0; i < scene.meshes.length; i++) {
-                    var material = scene.meshes[i].material;
-                    if (material instanceof BABYLON.MultiMaterial) {
-                        for (var j = 0; j < material.subMaterials.length; j++) {
-                            var subMaterial = material.subMaterials[j];
-                            if (subMaterial instanceof BABYLON.PBRMaterial) {
-                                subMaterial.reflectionTexture = hdrTexture;
-                            }
-                        }
-                    }
-                }
-
-                var hdrSkybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
-                var hdrSkyboxMaterial = new BABYLON.PBRMaterial("skyBox", scene);
-                hdrSkyboxMaterial.backFaceCulling = false;
-                hdrSkyboxMaterial.reflectionTexture = hdrTexture.clone();
-                hdrSkyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-                hdrSkyboxMaterial.microSurface = 1.0;
-                hdrSkyboxMaterial.cameraExposure = 0.6;
-                hdrSkyboxMaterial.cameraContrast = 1.6;
-                hdrSkyboxMaterial.disableLighting = true;
-                hdrSkybox.material = hdrSkyboxMaterial;
-                hdrSkybox.infiniteDistance = true;
-
-                engine.runRenderLoop(function () {
-                    scene.render();
-                });
-            });
-        }
-
-        function onModelChange() {
-            var modelExtension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
-            var backgroundExtension = "";
-
-            // maps to attribution for image files here per cc license guidelines
-            // first element must match background name in gui menu
-            var imageSources = {
-                "country": "http://www.openfootage.net/",
-                "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
-                "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
-                "woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
-                "theater": "http://www.hdrlabs.com/",
-                "darkPark": "http://noemotionhdrs.net/"
-            };
-
-            if (imageSources[options.background]) {
-                options.attribution = imageSources[options.background];
-            }
-            else {
-                options.attribution = " ";
-            }
-
-            load("models/2.0/" + options.model + "/" + options.folder + "/",
-                  options.model + modelExtension,
-                  "images/" + options.background + ".babylon.hdr"); 
-        }
-
     </script>
 </body>
 </html>
