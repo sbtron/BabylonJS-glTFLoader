@@ -31,6 +31,7 @@
         var Options = function () {
             this.model = "Avocado";
             this.folder = "glTF";
+            this.imageFormat = "jpg";
             this.environment = "country";
             this.attribution = "";
             this.pointLight = false;
@@ -51,6 +52,9 @@
                         break;
                     case "folder":
                         this.options.folder = parameter[1];
+                        break;
+                    case "imageFormat":
+                        this.options.imageFormat = parameter[1];
                         break;
                     case "environment":
                         this.options.environment = parameter[1];
@@ -85,6 +89,12 @@
             "glTF",
             "glTF-Binary",
             "glTF-pbrSpecularGlossiness",
+        ]).onChange(loadScene);
+
+        gui.add(options, "imageFormat", [
+            "jpg",
+            "jpg-with-quantized-png",
+            "png",
         ]).onChange(loadScene);
 
         // maps to attribution for image files here per cc license guidelines

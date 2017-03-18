@@ -14,7 +14,7 @@ function loadScene() {
     engine.enableOfflineSupport = false;
 
     var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
-    var rootUrl = "models/2.0/" + options.model + "/" + options.folder + "/";
+    var rootUrl = "models/2.0/" + options.imageFormat + "/" + options.model + "/" + options.folder + "/";
     var fileName = options.model + extension;
 
     BABYLON.GLTFFileLoader.IncrementalLoading = false;

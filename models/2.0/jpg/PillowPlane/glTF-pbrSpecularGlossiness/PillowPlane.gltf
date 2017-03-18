@@ -1,0 +1,231 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 121,
+      "type": "VEC2",
+      "max": [
+        1.0,
+        0.0
+      ],
+      "min": [
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 121,
+      "type": "VEC3",
+      "max": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "min": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 121,
+      "type": "VEC4",
+      "max": [
+        -1.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 121,
+      "type": "VEC3",
+      "max": [
+        5.0,
+        1.110223E-16,
+        5.0
+      ],
+      "min": [
+        -5.0,
+        -1.110223E-16,
+        -5.0
+      ]
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 600,
+      "type": "SCALAR",
+      "max": [
+        120
+      ],
+      "min": [
+        0
+      ]
+    }
+  ],
+  "asset": {
+    "generator": "glTF Tools for Unity",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 968
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 968,
+      "byteLength": 1452
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2420,
+      "byteLength": 1936
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 4356,
+      "byteLength": 1452
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 5808,
+      "byteLength": 1200
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "PillowPlane.bin",
+      "byteLength": 7008
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "images": [
+    {
+      "uri": "PillowPlane_baseColor.jpg"
+    },
+    {
+      "uri": "PillowPlane_metallicRoughness.jpg"
+    },
+    {
+      "uri": "PillowPlane_normal.jpg"
+    },
+    {
+      "uri": "PillowPlane_diffuse.jpg"
+    },
+    {
+      "uri": "PillowPlane_specularGlossiness.png"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "TEXCOORD_0": 0,
+            "NORMAL": 1,
+            "TANGENT": 2,
+            "POSITION": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ],
+      "name": "Plane"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "normalTexture": {
+        "index": 2
+      },
+      "name": "PillowMat",
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 3
+          },
+          "specularGlossinessTexture": {
+            "index": 4
+          }
+        }
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "children": [],
+      "mesh": 0,
+      "scale": [
+        0.15,
+        0.15,
+        0.15
+      ],
+      "name": "PillowPlane"
+    }
+  ],
+  "samplers": [
+    {}
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    }
+  ]
+}

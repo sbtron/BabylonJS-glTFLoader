@@ -1,0 +1,510 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2156,
+      "type": "VEC2",
+      "max": [
+        0.9915311,
+        -0.004239505
+      ],
+      "min": [
+        0.005636882,
+        -0.994077146
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2156,
+      "type": "VEC3",
+      "max": [
+        1.0,
+        1.0,
+        0.9943777
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.9943777
+      ]
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2156,
+      "type": "VEC4",
+      "max": [
+        0.997859538,
+        0.994513154,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9980945,
+        -0.9965113,
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2156,
+      "type": "VEC3",
+      "max": [
+        0.09673439,
+        0.320718765,
+        0.09673401
+      ],
+      "min": [
+        -0.09673393,
+        0.0,
+        -0.09673423
+      ]
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 9876,
+      "type": "SCALAR",
+      "max": [
+        2155
+      ],
+      "min": [
+        0
+      ]
+    },
+    {
+      "bufferView": 5,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2518,
+      "type": "VEC2",
+      "max": [
+        0.9931404,
+        -0.00536990725
+      ],
+      "min": [
+        0.142952234,
+        -0.49859795
+      ]
+    },
+    {
+      "bufferView": 6,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2518,
+      "type": "VEC3",
+      "max": [
+        1.0,
+        0.956569135,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.956569,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 7,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2518,
+      "type": "VEC4",
+      "max": [
+        1.0,
+        0.9999908,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9999908,
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 8,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2518,
+      "type": "VEC3",
+      "max": [
+        0.05143829,
+        0.288371652,
+        0.0514381379
+      ],
+      "min": [
+        -0.0514380634,
+        0.0323468,
+        -0.0514382161
+      ]
+    },
+    {
+      "bufferView": 9,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 13248,
+      "type": "SCALAR",
+      "max": [
+        2517
+      ],
+      "min": [
+        0
+      ]
+    },
+    {
+      "bufferView": 10,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 957,
+      "type": "VEC2",
+      "max": [
+        0.991261542,
+        -0.006689554
+      ],
+      "min": [
+        0.0906246,
+        -0.990612864
+      ]
+    },
+    {
+      "bufferView": 11,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 957,
+      "type": "VEC3",
+      "max": [
+        0.9999541,
+        1.0,
+        0.9999541
+      ],
+      "min": [
+        -0.9999541,
+        -0.8021131,
+        -0.9999541
+      ]
+    },
+    {
+      "bufferView": 12,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 957,
+      "type": "VEC4",
+      "max": [
+        1.0,
+        0.9989447,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.9988809,
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 13,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 957,
+      "type": "VEC3",
+      "max": [
+        0.0475219749,
+        0.223281533,
+        0.04752183
+      ],
+      "min": [
+        -0.04752179,
+        0.0323467255,
+        -0.0475219041
+      ]
+    },
+    {
+      "bufferView": 14,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 4824,
+      "type": "SCALAR",
+      "max": [
+        956
+      ],
+      "min": [
+        0
+      ]
+    }
+  ],
+  "asset": {
+    "generator": "glTF Tools for Unity",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 17248
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 17248,
+      "byteLength": 25872
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 43120,
+      "byteLength": 34496
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 77616,
+      "byteLength": 25872
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 103488,
+      "byteLength": 19752
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 123240,
+      "byteLength": 20144
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 143384,
+      "byteLength": 30216
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 173600,
+      "byteLength": 40288
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 213888,
+      "byteLength": 30216
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 244104,
+      "byteLength": 26496
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 270600,
+      "byteLength": 7656
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 278256,
+      "byteLength": 11484
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 289740,
+      "byteLength": 15312
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 305052,
+      "byteLength": 11484
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 316536,
+      "byteLength": 9648
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "Hourglass.bin",
+      "byteLength": 326184
+    }
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "images": [
+    {
+      "uri": "Hourglass_baseColor.png"
+    },
+    {
+      "uri": "Hourglass_metallicRoughness.jpg"
+    },
+    {
+      "uri": "Hourglass_diffuse.png"
+    },
+    {
+      "uri": "Hourglass_specularGlossiness.png"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "TEXCOORD_0": 0,
+            "NORMAL": 1,
+            "TANGENT": 2,
+            "POSITION": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ],
+      "name": "hourglass_frame"
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "TEXCOORD_0": 5,
+            "NORMAL": 6,
+            "TANGENT": 7,
+            "POSITION": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ],
+      "name": "hourglass_glass"
+    },
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "TEXCOORD_0": 10,
+            "NORMAL": 11,
+            "TANGENT": 12,
+            "POSITION": 13
+          },
+          "indices": 14,
+          "material": 0,
+          "mode": 4
+        }
+      ],
+      "name": "hourglass_sand"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "name": "9328_hourglass",
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 2
+          },
+          "specularGlossinessTexture": {
+            "index": 3
+          }
+        }
+      }
+    },
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "alphaMode": "BLEND",
+      "name": "9328_hourglass_glass",
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseTexture": {
+            "index": 2
+          },
+          "specularGlossinessTexture": {
+            "index": 3
+          }
+        }
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "children": [],
+      "mesh": 0,
+      "name": "hourglass_frame"
+    },
+    {
+      "children": [],
+      "mesh": 1,
+      "name": "hourglass_glass"
+    },
+    {
+      "children": [],
+      "mesh": 2,
+      "name": "hourglass_sand"
+    },
+    {
+      "children": [
+        0,
+        1,
+        2
+      ],
+      "scale": [
+        4.318426,
+        4.31842566,
+        4.31842566
+      ],
+      "translation": [
+        -7.3546E-08,
+        -0.69331,
+        3.5587E-08
+      ],
+      "name": "Hourglass"
+    }
+  ],
+  "samplers": [
+    {}
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        3
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    }
+  ]
+}
