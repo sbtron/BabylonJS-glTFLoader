@@ -336,7 +336,7 @@
       "uri": "Hourglass_baseColor.png"
     },
     {
-      "uri": "Hourglass_metallicRoughness.png"
+      "uri": "Hourglass_roughnessMetallic.png"
     }
   ],
   "meshes": [

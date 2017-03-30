@@ -127,16 +127,16 @@
       "uri": "BoomBox_baseColor.jpg"
     },
     {
-      "uri": "BoomBox_metallicRoughness.jpg"
+      "uri": "BoomBox_roughnessMetallic.jpg"
     },
     {
       "uri": "BoomBox_normal.jpg"
     },
     {
-      "uri": "BoomBox_occlusion.jpg"
+      "uri": "BoomBox_emissive.jpg"
     },
     {
-      "uri": "BoomBox_emissive.jpg"
+      "uri": "BoomBox_occlusion.jpg"
     },
     {
       "uri": "BoomBox_diffuse.jpg"
@@ -177,7 +177,7 @@
         "index": 2
       },
       "occlusionTexture": {
-        "index": 3
+        "index": 4
       },
       "emissiveFactor": [
         1.0,
@@ -185,7 +185,7 @@
         1.0
       ],
       "emissiveTexture": {
-        "index": 4
+        "index": 3
       },
       "name": "BoomBox_Mat",
       "extensions": {

@@ -339,7 +339,7 @@
       "uri": "AppleTree_baseColor.jpg"
     },
     {
-      "uri": "AppleTree_metallicRoughness.jpg"
+      "uri": "AppleTree_roughnessMetallic.jpg"
     },
     {
       "uri": "AppleTree_normal.jpg"
@@ -354,7 +354,7 @@
       "uri": "AppleTree_baseColor1.jpg"
     },
     {
-      "uri": "AppleTree_metallicRoughness1.jpg"
+      "uri": "AppleTree_roughnessMetallic1.jpg"
     },
     {
       "uri": "AppleTree_normal1.jpg"
@@ -369,7 +369,7 @@
       "uri": "AppleTree_baseColor2.png"
     },
     {
-      "uri": "AppleTree_metallicRoughness2.jpg"
+      "uri": "AppleTree_roughnessMetallic2.jpg"
     },
     {
       "uri": "AppleTree_normal2.jpg"
@@ -493,6 +493,7 @@
         "index": 12
       },
       "alphaMode": "MASK",
+      "doubleSided": true,
       "name": "7179_apple_tree_leafcards_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {

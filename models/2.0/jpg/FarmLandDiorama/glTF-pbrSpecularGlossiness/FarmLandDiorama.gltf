@@ -551,7 +551,7 @@
       "uri": "FarmLandDiorama_baseColor.jpg"
     },
     {
-      "uri": "FarmLandDiorama_metallicRoughness.jpg"
+      "uri": "FarmLandDiorama_roughnessMetallic.jpg"
     },
     {
       "uri": "FarmLandDiorama_normal.jpg"
@@ -569,7 +569,7 @@
       "uri": "FarmLandDiorama_baseColor1.jpg"
     },
     {
-      "uri": "FarmLandDiorama_metallicRoughness1.jpg"
+      "uri": "FarmLandDiorama_roughnessMetallic1.jpg"
     },
     {
       "uri": "FarmLandDiorama_normal1.jpg"
@@ -587,7 +587,7 @@
       "uri": "FarmLandDiorama_baseColor2.jpg"
     },
     {
-      "uri": "FarmLandDiorama_metallicRoughness2.jpg"
+      "uri": "FarmLandDiorama_roughnessMetallic2.jpg"
     },
     {
       "uri": "FarmLandDiorama_normal2.jpg"
@@ -605,7 +605,7 @@
       "uri": "FarmLandDiorama_baseColor3.png"
     },
     {
-      "uri": "FarmLandDiorama_metallicRoughness3.jpg"
+      "uri": "FarmLandDiorama_roughnessMetallic3.jpg"
     },
     {
       "uri": "FarmLandDiorama_normal3.jpg"
@@ -620,7 +620,7 @@
       "uri": "FarmLandDiorama_baseColor4.png"
     },
     {
-      "uri": "FarmLandDiorama_metallicRoughness4.jpg"
+      "uri": "FarmLandDiorama_roughnessMetallic4.jpg"
     },
     {
       "uri": "FarmLandDiorama_normal4.jpg"
@@ -812,6 +812,7 @@
         "index": 20
       },
       "alphaMode": "MASK",
+      "doubleSided": true,
       "name": "7285_farm land diorama_d_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {
@@ -840,6 +841,7 @@
         "index": 26
       },
       "alphaMode": "MASK",
+      "doubleSided": true,
       "name": "7285_farm land diorama_e_col",
       "extensions": {
         "KHR_materials_pbrSpecularGlossiness": {

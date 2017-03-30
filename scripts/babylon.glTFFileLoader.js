@@ -430,10 +430,6 @@ var BABYLON;
         getNodesToRoot(runtime, newSkeleton, skin, nodesToRoot);
         newSkeleton.bones = [];
 
-        if (nodesToRoot.length === 0) {
-            newSkeleton.needInitialSkinMatrix = true;
-        }
-
         // Joints
         for (var i = 0; i < skin.jointNames.length; i++) {
             var jointNode = getJointNode(runtime, skin.jointNames[i]);
@@ -603,9 +599,12 @@ var BABYLON;
                     tempVertexData.matricesWeights = new Float32Array(buffer.length);
                     tempVertexData.matricesWeights.set(buffer);
                 }
-                else if (semantic === "COLOR") {
+                else if (semantic === "COLOR_0") {
                     tempVertexData.colors = new Float32Array(buffer.length);
                     tempVertexData.colors.set(buffer);
+                }
+                else {
+                    BABYLON.Tools.Warn("Ignoring unrecognized semantic '" + semantic + "'");
                 }
             }
             // Indices
@@ -648,40 +647,38 @@ var BABYLON;
         return babylonMesh;
     };
     /**
-    * Configure node transformation from position, rotation and scaling
-    */
-    var configureNode = function (newNode, position, rotation, scaling) {
-        if (newNode.position) {
-            newNode.position = position;
-        }
-        if (newNode.rotationQuaternion || newNode.rotation) {
-            newNode.rotationQuaternion = rotation;
-        }
-        if (newNode.scaling) {
-            newNode.scaling = scaling;
-        }
-    };
-    /**
     * Configures node transformation
     */
-    var configureNodeFromGLTFNode = function (newNode, node, parent) {
+    var configureNode = function (babylonNode, node) {
+        var position = BABYLON.Vector3.Zero();
+        var rotation = BABYLON.Quaternion.Identity();
+        var scaling = new BABYLON.Vector3(1, 1, 1);
         if (node.matrix) {
-            var position = new BABYLON.Vector3(0, 0, 0);
-            var rotation = new BABYLON.Quaternion();
-            var scaling = new BABYLON.Vector3(0, 0, 0);
             var mat = BABYLON.Matrix.FromArray(node.matrix);
             mat.decompose(scaling, rotation, position);
-            configureNode(newNode, position, rotation, scaling);
-            newNode.computeWorldMatrix(true);
         }
         else {
-            configureNode(newNode, BABYLON.Vector3.FromArray(node.translation || [0, 0, 0]), BABYLON.Quaternion.FromArray(node.rotation || [0, 0, 0, 1]), BABYLON.Vector3.FromArray(node.scale || [1, 1, 1]));
+            if (node.translation) {
+                position = BABYLON.Vector3.FromArray(node.translation);
+            }
+            if (node.rotation) {
+                rotation = BABYLON.Quaternion.FromArray(node.rotation);
+            }
+            if (node.scale) {
+                scaling = BABYLON.Vector3.FromArray(node.scale);
+            }
+        }
+        babylonNode.position = position;
+        babylonNode.rotationQuaternion = rotation;
+        if (babylonNode instanceof BABYLON.Mesh) {
+            var mesh = babylonNode;
+            mesh.scaling = scaling;
         }
     };
     /**
     * Imports a node
     */
-    var importNode = function (runtime, node, parent) {
+    var importNode = function (runtime, node) {
         var babylonNode = null;
         if (runtime.importOnlyMeshes && (node.skin !== undefined || node.mesh !== undefined)) {
             if (runtime.importMeshesNames.length > 0 && runtime.importMeshesNames.indexOf(node.name) === -1) {
@@ -733,15 +730,7 @@ var BABYLON;
             }
         }
         if (babylonNode !== null) {
-            if (babylonNode instanceof BABYLON.Mesh) {
-                configureNodeFromGLTFNode(babylonNode, node, parent);
-            }
-            else {
-                var translation = node.translation || [0, 0, 0];
-                var rotation = node.rotation || [0, 0, 0, 1];
-                var scale = node.scale || [1, 1, 1];
-                configureNode(babylonNode, BABYLON.Vector3.FromArray(translation), BABYLON.Quaternion.RotationAxis(BABYLON.Vector3.FromArray(rotation).normalize(), rotation[3]), BABYLON.Vector3.FromArray(scale));
-            }
+            configureNode(babylonNode, node);
             babylonNode.updateCache(true);
             node.babylonNode = babylonNode;
         }
@@ -765,7 +754,7 @@ var BABYLON;
             meshIncluded = true;
         }
         if (node.jointName === undefined && meshIncluded) {
-            newNode = importNode(runtime, node, parent);
+            newNode = importNode(runtime, node);
             if (newNode !== null) {
                 newNode.parent = parent;
             }
@@ -876,6 +865,7 @@ var BABYLON;
             if (material.occlusionTexture) {
                 GLTFFileLoader.LoadTextureAsync(runtime, material.occlusionTexture, function (babylonTexture) {
                     material.babylonMaterial.ambientTexture = babylonTexture;
+                    material.babylonMaterial.useAmbientFromAmbientTextureRed = true;
                     if (material.occlusionTexture.strength !== undefined) {
                         material.babylonMaterial.ambientTextureStrength = material.occlusionTexture.strength;
                     }
@@ -888,22 +878,29 @@ var BABYLON;
                     material.babylonMaterial.emissiveTexture = babylonTexture;
                 }, function () { return BABYLON.Tools.Warn("Failed to load normal texture"); });
             }
+            if (material.doubleSided) {
+                material.babylonMaterial.backFaceCulling = false;
+                material.babylonMaterial.twoSidedLighting = true;
+            }
         };
         GLTFFileLoader.LoadAlphaProperties = function (runtime, material) {
-            if (material.alphaMode) {
-                material.babylonMaterial.albedoTexture.hasAlpha = true;
-                switch (material.alphaMode) {
-                    case "MASK":
-                        material.babylonMaterial.useAlphaFromAlbedoTexture = false;
-                        material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_DISABLE;
-                        break;
-                    case "BLEND":
-                        material.babylonMaterial.useAlphaFromAlbedoTexture = true;
-                        material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
-                        break;
-                    default:
-                        BABYLON.Tools.Error("Invalid alpha mode '" + material.alphaMode + "'");
-                }
+            var alphaMode = material.alphaMode || "OPAQUE";
+            switch (alphaMode) {
+                case "OPAQUE":
+                    // default is opaque
+                    break;
+                case "MASK":
+                    material.babylonMaterial.albedoTexture.hasAlpha = true;
+                    material.babylonMaterial.useAlphaFromAlbedoTexture = false;
+                    material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_DISABLE;
+                    break;
+                case "BLEND":
+                    material.babylonMaterial.albedoTexture.hasAlpha = true;
+                    material.babylonMaterial.useAlphaFromAlbedoTexture = true;
+                    material.babylonMaterial.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+                    break;
+                default:
+                    BABYLON.Tools.Error("Invalid alpha mode '" + material.alphaMode + "'");
             }
         };
         GLTFFileLoader.LoadTextureAsync = function (runtime, textureInfo, onSuccess, onError) {
@@ -1076,7 +1073,6 @@ var BABYLON;
                 babylonScene: scene,
                 rootUrl: rootUrl,
                 importOnlyMeshes: importOnlyMeshes,
-                dummyNodes: []
             };
             if (data instanceof ArrayBuffer) {
                 if (!this._parseBinary(runtime, data)) {
@@ -1183,6 +1179,7 @@ var BABYLON;
         if (properties.metallicRoughnessTexture) {
             GLTFFileLoader.LoadTextureAsync(runtime, properties.metallicRoughnessTexture, function (texture) {
                 material.babylonMaterial.metallicTexture = texture;
+                material.babylonMaterial.useMetallicFromMetallicTextureBlue = true;
                 material.babylonMaterial.useRoughnessFromMetallicTextureGreen = true;
                 material.babylonMaterial.useRoughnessFromMetallicTextureAlpha = false;
             }, function () {

@@ -124,7 +124,7 @@
       "uri": "SmilingFace_baseColor.png"
     },
     {
-      "uri": "SmilingFace_metallicRoughness.png"
+      "uri": "SmilingFace_roughnessMetallic.png"
     }
   ],
   "meshes": [

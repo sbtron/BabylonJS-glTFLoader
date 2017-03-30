@@ -31,7 +31,7 @@
         var Options = function () {
             this.model = "Avocado";
             this.folder = "glTF";
-            this.imageFormat = "jpg";
+            this.imageFormat = "png";
             this.environment = "country";
             this.attribution = "";
             this.pointLight = false;
@@ -82,7 +82,8 @@
             "Lantern",
             "PillowPlane",
             "SmilingFace",
-            "Telephone"
+            "Telephone",
+            "WaterBottle"
         ]).onChange(loadScene);
 
         gui.add(options, "folder", [

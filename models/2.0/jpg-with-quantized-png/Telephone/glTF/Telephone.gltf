@@ -124,13 +124,10 @@
       "uri": "Telephone_baseColor.jpg"
     },
     {
-      "uri": "Telephone_metallicRoughness.jpg"
+      "uri": "Telephone_occlusionRoughnessMetallic.jpg"
     },
     {
       "uri": "Telephone_normal.jpg"
-    },
-    {
-      "uri": "Telephone_occlusion.jpg"
     }
   ],
   "meshes": [
@@ -165,7 +162,7 @@
         "index": 2
       },
       "occlusionTexture": {
-        "index": 3
+        "index": 1
       },
       "name": "telephone_mr"
     }
@@ -210,10 +207,6 @@
     {
       "sampler": 0,
       "source": 2
-    },
-    {
-      "sampler": 0,
-      "source": 3
     }
   ]
 }

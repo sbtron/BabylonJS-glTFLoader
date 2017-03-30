@@ -124,13 +124,10 @@
       "uri": "Corset_baseColor.jpg"
     },
     {
-      "uri": "Corset_metallicRoughness.jpg"
+      "uri": "Corset_occlusionRoughnessMetallic.jpg"
     },
     {
       "uri": "Corset_normal.jpg"
-    },
-    {
-      "uri": "Corset_occlusion.jpg"
     }
   ],
   "meshes": [
@@ -165,7 +162,7 @@
         "index": 2
       },
       "occlusionTexture": {
-        "index": 3
+        "index": 1
       },
       "name": "Corset_O"
     }
@@ -210,10 +207,6 @@
     {
       "sampler": 0,
       "source": 2
-    },
-    {
-      "sampler": 0,
-      "source": 3
     }
   ]
 }
