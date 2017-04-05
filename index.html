@@ -72,6 +72,7 @@
         var gui = new dat.GUI({ autoplace: false, width: 400 });
 
         gui.add(options, "model", [
+            "AnimatedTriangle",
             "AppleTree",
             "Avocado",
             "BarramundiFish",
@@ -81,8 +82,10 @@
             "Hourglass",
             "Lantern",
             "PillowPlane",
+            "SimpleSkin",
             "SmilingFace",
             "Telephone",
+            "Triangle",
             "WaterBottle"
         ]).onChange(loadScene);
 
