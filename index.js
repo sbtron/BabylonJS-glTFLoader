@@ -7,6 +7,8 @@ function loadScene() {
         beta = camera.beta;
         radius = camera.radius;
 
+        window.removeEventListener("resize", resizeEventListener());
+        engine.stopEngineLoop(renderLoop());
         engine.dispose();
     }
 
@@ -74,10 +76,20 @@ function loadScene() {
             }
         }
 
-        engine.runRenderLoop(function () {
-            scene.render();
-        });
+        engine.runRenderLoop(renderLoop());
     });
+
+    window.addEventListener("resize", resizeEventListener());
+}
+
+function resizeEventListener() {
+    if (engine) {
+        engine.resize();
+    }
+}
+
+function renderLoop() {
+    scene.render();
 }
 
 function updateLightPosition() {
