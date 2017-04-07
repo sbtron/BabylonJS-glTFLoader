@@ -1027,6 +1027,7 @@ var BABYLON;
                 babylonScene: scene,
                 rootUrl: rootUrl,
                 importOnlyMeshes: importOnlyMeshes,
+                defaultMaterial: undefined
             };
             if (data instanceof ArrayBuffer) {
                 if (!this._parseBinary(runtime, data)) {
@@ -1263,7 +1264,7 @@ var BABYLON;
          * @param scene: the Babylon.js scene
          */
         GLTFUtils.GetDefaultMaterial = function (runtime) {
-            if (runtime.defaultMaterial !== undefined) {
+            if (runtime.defaultMaterial === undefined) {
                 var material = new BABYLON.PBRMaterial("gltf_default", runtime.babylonScene);
                 material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
                 material.albedoColor = new BABYLON.Color3(0.5, 0.5, 0.5);
