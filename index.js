@@ -6,17 +6,13 @@ function loadScene() {
         engine.resize();
     }
 
-    function renderLoop() {
-        scene.render();
-    }
-
     if (engine) {
         alpha = camera.alpha;
         beta = camera.beta;
         radius = camera.radius;
 
         window.removeEventListener("resize", resizeEventListener);
-        engine.stopEngineLoop(renderLoop);
+        engine.stopRenderLoop();
         engine.dispose();
     }
 
@@ -84,7 +80,9 @@ function loadScene() {
             }
         }
 
-        engine.runRenderLoop(renderLoop);
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
     });
 
     window.addEventListener("resize", resizeEventListener);
