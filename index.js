@@ -2,13 +2,21 @@
 var sphere = null;
 
 function loadScene() {
+    function resizeEventListener() {
+        engine.resize();
+    }
+
+    function renderLoop() {
+        scene.render();
+    }
+
     if (engine) {
         alpha = camera.alpha;
         beta = camera.beta;
         radius = camera.radius;
 
-        window.removeEventListener("resize", resizeEventListener(engine));
-        engine.stopEngineLoop(renderLoop(scene));
+        window.removeEventListener("resize", resizeEventListener);
+        engine.stopEngineLoop(renderLoop);
         engine.dispose();
     }
 
@@ -76,18 +84,10 @@ function loadScene() {
             }
         }
 
-        engine.runRenderLoop(renderLoop(scene));
+        engine.runRenderLoop(renderLoop);
     });
 
-    window.addEventListener("resize", resizeEventListener(engine));
-
-    function resizeEventListener(engine) {
-        engine.resize();
-    }
-
-    function renderLoop(scene) {
-        scene.render();
-    }
+    window.addEventListener("resize", resizeEventListener);
 }
 
 function updateLightPosition() {
