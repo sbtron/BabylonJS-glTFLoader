@@ -76,19 +76,17 @@ function loadScene() {
             }
         }
 
-        engine.runRenderLoop(renderLoop());
+        engine.runRenderLoop(renderLoop(scene));
     });
 
-    window.addEventListener("resize", resizeEventListener());
+    window.addEventListener("resize", resizeEventListener(engine));
 }
 
-function resizeEventListener() {
-    if (engine) {
-        engine.resize();
-    }
+function resizeEventListener(engine) {
+    engine.resize();
 }
 
-function renderLoop() {
+function renderLoop(scene) {
     scene.render();
 }
 
