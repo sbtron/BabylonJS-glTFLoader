@@ -7,8 +7,8 @@ function loadScene() {
         beta = camera.beta;
         radius = camera.radius;
 
-        window.removeEventListener("resize", resizeEventListener());
-        engine.stopEngineLoop(renderLoop());
+        window.removeEventListener("resize", resizeEventListener(engine));
+        engine.stopEngineLoop(renderLoop(scene));
         engine.dispose();
     }
 
