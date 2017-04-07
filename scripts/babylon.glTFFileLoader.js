@@ -573,7 +573,7 @@ var BABYLON;
             if (runtime.gltf.materials && runtime.gltf.materials.length > 0) {
                 material = runtime.gltf.materials[primitive.material].babylonMaterial;
             }
-            multiMat.subMaterials.push(material === undefined ? BABYLON.GLTFUtils.GetDefaultMaterial(runtime.babylonScene) : material);
+            multiMat.subMaterials.push(material === undefined ? BABYLON.GLTFUtils.GetDefaultMaterial(runtime) : material);
             // Update vertices start and index start
             verticesStarts.push(verticesStarts.length === 0 ? 0 : verticesStarts[verticesStarts.length - 1] + verticesCounts[verticesCounts.length - 2]);
             indexStarts.push(indexStarts.length === 0 ? 0 : indexStarts[indexStarts.length - 1] + indexCounts[indexCounts.length - 2]);
@@ -1262,21 +1262,19 @@ var BABYLON;
          * Returns the default material of gltf.
          * @param scene: the Babylon.js scene
          */
-        GLTFUtils.GetDefaultMaterial = function (scene) {
-            if (!GLTFUtils._DefaultMaterial) {
-                var material = new BABYLON.PBRMaterial("gltf_default", scene);
+        GLTFUtils.GetDefaultMaterial = function (runtime) {
+            if (runtime.defaultMaterial !== undefined) {
+                var material = new BABYLON.PBRMaterial("gltf_default", runtime.babylonScene);
                 material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
                 material.albedoColor = new BABYLON.Color3(0.5, 0.5, 0.5);
                 material.metallic = 0;
                 material.roughness = 0.5;
-                GLTFUtils._DefaultMaterial = material;
+                runtime.defaultMaterial = material;
             }
-            return GLTFUtils._DefaultMaterial;
+            return runtime.defaultMaterial;
         };
         return GLTFUtils;
     }());
-    // The GLTF default material
-    GLTFUtils._DefaultMaterial = null;
     BABYLON.GLTFUtils = GLTFUtils;
 })(BABYLON || (BABYLON = {}));
 
