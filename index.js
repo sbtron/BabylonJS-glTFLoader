@@ -2,11 +2,17 @@
 var sphere = null;
 
 function loadScene() {
+    function resizeEventListener() {
+        engine.resize();
+    }
+
     if (engine) {
         alpha = camera.alpha;
         beta = camera.beta;
         radius = camera.radius;
 
+        window.removeEventListener("resize", resizeEventListener);
+        engine.stopRenderLoop();
         engine.dispose();
     }
 
@@ -78,6 +84,8 @@ function loadScene() {
             scene.render();
         });
     });
+
+    window.addEventListener("resize", resizeEventListener);
 }
 
 function updateLightPosition() {

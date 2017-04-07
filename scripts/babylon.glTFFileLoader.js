@@ -113,6 +113,9 @@ var BABYLON;
             buffer[i * 2 + 1] = 1.0 - buffer[i * 2 + 1];
         }
     };
+    var createStringId = function (index) {
+        return "node" + index;
+    };
     /**
     * Returns the animation path (glTF -> Babylon)
     */
@@ -133,7 +136,7 @@ var BABYLON;
         }
         for (var animationIndex = 0; animationIndex < animations.length; animationIndex++) {
             var animation = animations[animationIndex];
-            if (!animation || !animation.channels) {
+            if (!animation || !animation.channels || !animation.samplers) {
                 continue;
             }
             var lastAnimation = null;
@@ -150,8 +153,8 @@ var BABYLON;
                 var outputData = sampler.output;
                 var bufferInput = BABYLON.GLTFUtils.GetBufferFromAccessor(runtime, runtime.gltf.accessors[inputData]);
                 var bufferOutput = BABYLON.GLTFUtils.GetBufferFromAccessor(runtime, runtime.gltf.accessors[outputData]);
-                var targetID = channel.target.id;
-                var targetNode = runtime.gltf.nodes[channel.target.id].babylonNode;
+                var targetID = channel.target.node;
+                var targetNode = runtime.babylonScene.getNodeByID(createStringId(targetID));
                 if (targetNode === null) {
                     BABYLON.Tools.Warn("Creating animation index " + animationIndex + " but cannot find node index " + targetID + " to attach to");
                     continue;
@@ -253,275 +256,214 @@ var BABYLON;
             mat = BABYLON.Matrix.Compose(scale, rotation, position);
         }
         else {
-            mat = BABYLON.Matrix.FromArray(node.matrix);
+            mat = node.matrix ? BABYLON.Matrix.FromArray(node.matrix) : BABYLON.Matrix.Identity();
         }
         return mat;
     };
     /**
     * Returns the parent bone
     */
-    var getParentBone = function (runtime, skin, jointName, newSkeleton) {
-        // TODO: animation schema broken
-        /*
+    var getParentBone = function (runtime, skin, index, newSkeleton) {
         // Try to find
+        var nodeStringID = createStringId(index);
         for (var i = 0; i < newSkeleton.bones.length; i++) {
-            if (newSkeleton.bones[i].name === jointName) {
-                return newSkeleton.bones[i];
+            if (newSkeleton.bones[i].id === nodeStringID) {
+                return newSkeleton.bones[i].getParent();
             }
         }
-
         // Not found, search in gltf nodes
-        var nodes = runtime.gltf.nodes;
-        for (var nde in nodes) {
-            var node: IGLTFNode = nodes[nde];
-
-            if (!node.jointName) {
-                continue;
-            }
-
-            var children = node.children;
+        var joints = skin.joints;
+        for (var j = 0; j < joints.length; j++) {
+            var parentID = joints[j];
+            var parent = runtime.gltf.nodes[parentID];
+            var children = parent.children;
             for (var i = 0; i < children.length; i++) {
-                var child: IGLTFNode = runtime.gltf.nodes[children[i]];
-                if (!child.jointName) {
+                var childID = children[i];
+                var child = runtime.gltf.nodes[childID];
+                if (!nodeIsInJoints(skin, childID)) {
                     continue;
                 }
-
-                if (child.jointName === jointName) {
-                    var mat = configureBoneTransformation(node);
-                    var bone = new Bone(node.name, newSkeleton, getParentBone(runtime, skin, node.jointName, newSkeleton), mat);
-                    bone.id = nde;
+                if (childID === index) {
+                    var mat = configureBoneTransformation(parent);
+                    var bone = new BABYLON.Bone(parent.name || createStringId(parentID), newSkeleton, getParentBone(runtime, skin, parentID, newSkeleton), mat);
+                    bone.id = createStringId(parentID);
                     return bone;
                 }
             }
         }
-        */
         return null;
     };
     /**
     * Returns the appropriate root node
     */
-    var getNodeToRoot = function (nodesToRoot, id) {
-        // TODO: animation schema broken
-        /*
+    var getNodeToRoot = function (nodesToRoot, index) {
         for (var i = 0; i < nodesToRoot.length; i++) {
             var nodeToRoot = nodesToRoot[i];
-
-            for (var j = 0; j < nodeToRoot.node.children.length; j++) {
-                var child = nodeToRoot.node.children[j];
-                if (child === id) {
-                    return nodeToRoot.bone;
+            if (nodeToRoot.node.children) {
+                for (var j = 0; j < nodeToRoot.node.children.length; j++) {
+                    var child = nodeToRoot.node.children[j];
+                    if (child === index) {
+                        return nodeToRoot.bone;
+                    }
                 }
             }
         }
-        */
         return null;
     };
     /**
-    * Returns the node with the joint name
+    * Returns the node with the node index
     */
-    var getJointNode = function (runtime, jointName) {
-        // TODO: animation schema broken
-        /*
-        var nodes = runtime.nodes;
-        var node: IGLTFNode = nodes[jointName];
+    var getJointNode = function (runtime, index) {
+        var node = runtime.gltf.nodes[index];
         if (node) {
             return {
                 node: node,
-                id: jointName
+                index: index
             };
         }
-
-        for (var nde in nodes) {
-            node = nodes[nde];
-            if (node.jointName === jointName) {
-                return {
-                    node: node,
-                    id: nde
-                };
-            }
-        }
-        */
         return null;
     };
     /**
     * Checks if a nodes is in joints
     */
-    var nodeIsInJoints = function (skin, id) {
-        // TODO: animation schema broken
-        /*
-        for (var i = 0; i < skin.jointNames.length; i++) {
-            if (skin.jointNames[i] === id) {
+    var nodeIsInJoints = function (skin, index) {
+        for (var i = 0; i < skin.joints.length; i++) {
+            if (skin.joints[i] === index) {
                 return true;
             }
         }
-        */
         return false;
     };
     /**
     * Fills the nodes to root for bones and builds hierarchy
     */
     var getNodesToRoot = function (runtime, newSkeleton, skin, nodesToRoot) {
-        // TODO: animation schema broken
-        /*
         // Creates nodes for root
-        for (var nde in runtime.nodes) {
-            var node: IGLTFNode = runtime.nodes[nde];
-            var id = nde;
-
-            if (!node.jointName || nodeIsInJoints(skin, node.jointName)) {
+        for (var i = 0; i < runtime.gltf.nodes.length; i++) {
+            var node = runtime.gltf.nodes[i];
+            if (nodeIsInJoints(skin, i)) {
                 continue;
             }
-
             // Create node to root bone
             var mat = configureBoneTransformation(node);
-            var bone = new Bone(node.name, newSkeleton, null, mat);
-            bone.id = id;
-            nodesToRoot.push({ bone: bone, node: node, id: id });
+            var bone = new BABYLON.Bone(node.name || createStringId(i), newSkeleton, null, mat);
+            bone.id = createStringId(i);
+            nodesToRoot.push({ bone: bone, node: node, index: i });
         }
-
         // Parenting
         for (var i = 0; i < nodesToRoot.length; i++) {
             var nodeToRoot = nodesToRoot[i];
             var children = nodeToRoot.node.children;
-
-            for (var j = 0; j < children.length; j++) {
-                var child: INodeToRoot = null;
-
-                for (var k = 0; k < nodesToRoot.length; k++) {
-                    if (nodesToRoot[k].id === children[j]) {
-                        child = nodesToRoot[k];
-                        break;
+            if (children) {
+                for (var j = 0; j < children.length; j++) {
+                    var child = null;
+                    for (var k = 0; k < nodesToRoot.length; k++) {
+                        if (nodesToRoot[k].index === children[j]) {
+                            child = nodesToRoot[k];
+                            break;
+                        }
                     }
-                }
-
-                if (child) {
-                    (<any>child.bone)._parent = nodeToRoot.bone;
-                    nodeToRoot.bone.children.push(child.bone);
+                    if (child) {
+                        child.bone._parent = nodeToRoot.bone;
+                        nodeToRoot.bone.children.push(child.bone);
+                    }
                 }
             }
         }
-        */
     };
     /**
     * Imports a skeleton
     */
-    var importSkeleton = function (runtime, skin, mesh, newSkeleton, index) {
-        // TODO: animation schema broken
-        return null;
-        /*
-        if (!newSkeleton) {
-            newSkeleton = new Skeleton(skin.name, "", runtime.scene);
+    var importSkeleton = function (runtime, skinNode, skin) {
+        var name = skin.name || "skin" + skinNode.skin;
+        var babylonSkeleton = skin.babylonSkeleton;
+        if (!babylonSkeleton) {
+            babylonSkeleton = new BABYLON.Skeleton(name, "skin" + skinNode.skin, runtime.babylonScene);
         }
-
         if (!skin.babylonSkeleton) {
-            return newSkeleton;
+            return babylonSkeleton;
         }
-
         // Matrices
-        var accessor = runtime.accessors[skin.inverseBindMatrices];
-        var buffer = GLTFUtils.GetBufferFromAccessor(runtime, accessor);
-
-        var bindShapeMatrix = Matrix.FromArray(skin.bindShapeMatrix);
-
+        var accessor = runtime.gltf.accessors[skin.inverseBindMatrices];
+        var buffer = BABYLON.GLTFUtils.GetBufferFromAccessor(runtime, accessor);
         // Find the root bones
-        var nodesToRoot: INodeToRoot[] = [];
-        var nodesToRootToAdd: Bone[] = [];
-
-        getNodesToRoot(runtime, newSkeleton, skin, nodesToRoot);
-        newSkeleton.bones = [];
-
+        var nodesToRoot = [];
+        var nodesToRootToAdd = [];
+        getNodesToRoot(runtime, babylonSkeleton, skin, nodesToRoot);
+        babylonSkeleton.bones = [];
         // Joints
-        for (var i = 0; i < skin.jointNames.length; i++) {
-            var jointNode = getJointNode(runtime, skin.jointNames[i]);
+        for (var i = 0; i < skin.joints.length; i++) {
+            var jointNode = getJointNode(runtime, skin.joints[i]);
             var node = jointNode.node;
-
             if (!node) {
-                Tools.Warn("Joint named " + skin.jointNames[i] + " does not exist");
+                BABYLON.Tools.Warn("Joint index " + skin.joints[i] + " does not exist");
                 continue;
             }
-
-            var id = jointNode.id;
-
+            var index = jointNode.index;
+            var stringID = createStringId(index);
             // Optimize, if the bone already exists...
-            var existingBone = runtime.scene.getBoneByID(id);
+            var existingBone = runtime.babylonScene.getBoneByID(stringID);
             if (existingBone) {
-                newSkeleton.bones.push(existingBone);
+                babylonSkeleton.bones.push(existingBone);
                 continue;
             }
-
             // Search for parent bone
             var foundBone = false;
-            var parentBone: Bone = null;
-
+            var parentBone = null;
             for (var j = 0; j < i; j++) {
-                var joint: IGLTFNode = getJointNode(runtime, skin.jointNames[j]).node;
-
+                var joint = getJointNode(runtime, skin.joints[j]).node;
                 if (!joint) {
-                    Tools.Warn("Joint named " + skin.jointNames[j] + " does not exist when looking for parent");
+                    BABYLON.Tools.Warn("Joint index " + skin.joints[j] + " does not exist when looking for parent");
                     continue;
                 }
-
                 var children = joint.children;
                 foundBone = false;
-
                 for (var k = 0; k < children.length; k++) {
-                    if (children[k] === id) {
-                        parentBone = getParentBone(runtime, skin, skin.jointNames[j], newSkeleton);
+                    if (children[k] === index) {
+                        parentBone = getParentBone(runtime, skin, skin.joints[j], babylonSkeleton);
                         foundBone = true;
                         break;
                     }
                 }
-
                 if (foundBone) {
                     break;
                 }
             }
-
             // Create bone
             var mat = configureBoneTransformation(node);
-
             if (!parentBone && nodesToRoot.length > 0) {
-                parentBone = getNodeToRoot(nodesToRoot, id);
-
+                parentBone = getNodeToRoot(nodesToRoot, index);
                 if (parentBone) {
                     if (nodesToRootToAdd.indexOf(parentBone) === -1) {
                         nodesToRootToAdd.push(parentBone);
                     }
                 }
             }
-
-            var bone = new Bone(node.jointName, newSkeleton, parentBone, mat);
-            bone.id = id;
+            var bone = new BABYLON.Bone(node.name || stringID, babylonSkeleton, parentBone, mat);
+            bone.id = stringID;
         }
-
         // Polish
-        var bones = newSkeleton.bones;
-        newSkeleton.bones = [];
-        
-        for (var i = 0; i < skin.jointNames.length; i++) {
-            var jointNode: IJointNode = getJointNode(runtime, skin.jointNames[i]);
-
+        var bones = babylonSkeleton.bones;
+        babylonSkeleton.bones = [];
+        for (var i = 0; i < skin.joints.length; i++) {
+            var jointNode = getJointNode(runtime, skin.joints[i]);
             if (!jointNode) {
                 continue;
             }
-
+            var jointNodeStringId = createStringId(jointNode.index);
             for (var j = 0; j < bones.length; j++) {
-                if (bones[j].id === jointNode.id) {
-                    newSkeleton.bones.push(bones[j]);
+                if (bones[j].id === jointNodeStringId) {
+                    babylonSkeleton.bones.push(bones[j]);
                     break;
                 }
             }
         }
-
-        newSkeleton.prepare();
-
+        babylonSkeleton.prepare();
         // Finish
         for (var i = 0; i < nodesToRootToAdd.length; i++) {
-            newSkeleton.bones.push(nodesToRootToAdd[i]);
+            babylonSkeleton.bones.push(nodesToRootToAdd[i]);
         }
-
-        return newSkeleton;
-        */
+        return babylonSkeleton;
     };
     /**
     * Imports a mesh and its geometries
@@ -627,8 +569,11 @@ var BABYLON;
             vertexData.merge(tempVertexData);
             tempVertexData = undefined;
             // Sub material
-            var material = runtime.gltf.materials[primitive.material].babylonMaterial;
-            multiMat.subMaterials.push(material === undefined ? BABYLON.GLTFUtils.GetDefaultMaterial(runtime.babylonScene) : material);
+            var material = undefined;
+            if (runtime.gltf.materials && runtime.gltf.materials.length > 0) {
+                material = runtime.gltf.materials[primitive.material].babylonMaterial;
+            }
+            multiMat.subMaterials.push(material === undefined ? BABYLON.GLTFUtils.GetDefaultMaterial(runtime) : material);
             // Update vertices start and index start
             verticesStarts.push(verticesStarts.length === 0 ? 0 : verticesStarts[verticesStarts.length - 1] + verticesCounts[verticesCounts.length - 2]);
             indexStarts.push(indexStarts.length === 0 ? 0 : indexStarts[indexStarts.length - 1] + indexCounts[indexCounts.length - 2]);
@@ -687,17 +632,26 @@ var BABYLON;
         }
         // Meshes
         if (node.skin !== undefined) {
+            if (node.mesh !== undefined) {
+                var skin = runtime.gltf.skins[node.skin];
+                var newMesh = importMesh(runtime, node, runtime.gltf.meshes[node.mesh]);
+                var newSkeleton = importSkeleton(runtime, node, skin);
+                if (newSkeleton) {
+                    newMesh.skeleton = newSkeleton;
+                    skin.babylonSkeleton = newSkeleton;
+                }
+                babylonNode = newMesh;
+            }
         }
         else if (node.mesh !== undefined) {
             babylonNode = importMesh(runtime, node, runtime.gltf.meshes[node.mesh]);
         }
         else if (node.camera !== undefined && !node.babylonNode && !runtime.importOnlyMeshes) {
             var camera = runtime.gltf.cameras[node.camera];
-            if (camera) {
+            if (camera !== undefined) {
                 if (camera.type === "orthographic") {
                     var orthographicCamera = camera.orthographic;
                     var orthoCamera = new BABYLON.FreeCamera(node.name || "camera" + node.camera, BABYLON.Vector3.Zero(), runtime.babylonScene);
-                    orthoCamera.name = node.name;
                     orthoCamera.mode = BABYLON.Camera.ORTHOGRAPHIC_CAMERA;
                     orthoCamera.attachControl(runtime.babylonScene.getEngine().getRenderingCanvas());
                     babylonNode = orthoCamera;
@@ -705,7 +659,6 @@ var BABYLON;
                 else if (camera.type === "perspective") {
                     var perspectiveCamera = camera.perspective;
                     var persCamera = new BABYLON.FreeCamera(node.name || "camera" + node.camera, BABYLON.Vector3.Zero(), runtime.babylonScene);
-                    persCamera.name = node.name;
                     persCamera.attachControl(runtime.babylonScene.getEngine().getRenderingCanvas());
                     if (!perspectiveCamera.aspectRatio) {
                         perspectiveCamera.aspectRatio = runtime.babylonScene.getEngine().getRenderWidth() / runtime.babylonScene.getEngine().getRenderHeight();
@@ -719,15 +672,13 @@ var BABYLON;
             }
         }
         // Empty node
-        if (node.jointName === undefined) {
-            if (node.babylonNode) {
-                return node.babylonNode;
-            }
-            else if (babylonNode === null) {
-                var dummy = new BABYLON.Mesh(node.name, runtime.babylonScene);
-                node.babylonNode = dummy;
-                babylonNode = dummy;
-            }
+        if (node.babylonNode) {
+            return node.babylonNode;
+        }
+        else if (babylonNode === null) {
+            var dummy = new BABYLON.Mesh(node.name || "mesh" + node.mesh, runtime.babylonScene);
+            node.babylonNode = dummy;
+            babylonNode = dummy;
         }
         if (babylonNode !== null) {
             configureNode(babylonNode, node);
@@ -753,9 +704,10 @@ var BABYLON;
         else {
             meshIncluded = true;
         }
-        if (node.jointName === undefined && meshIncluded) {
+        if (meshIncluded) {
             newNode = importNode(runtime, node);
             if (newNode !== null) {
+                newNode.id = createStringId(index);
                 newNode.parent = parent;
             }
         }
@@ -793,8 +745,10 @@ var BABYLON;
         }
     };
     var importMaterials = function (runtime) {
-        for (var i = 0; i < runtime.gltf.materials.length; i++) {
-            BABYLON.GLTFFileLoaderExtension.LoadMaterial(runtime, i);
+        if (runtime.gltf.materials) {
+            for (var i = 0; i < runtime.gltf.materials.length; i++) {
+                BABYLON.GLTFFileLoaderExtension.LoadMaterial(runtime, i);
+            }
         }
     };
     var BinaryReader = (function () {
@@ -983,14 +937,14 @@ var BABYLON;
             var meshes = [];
             var skeletons = [];
             // Fill arrays of meshes and skeletons
-            for (var nde in runtime.gltf.nodes) {
-                var node = runtime.gltf.nodes[nde];
+            for (var i = 0; i < runtime.gltf.nodes.length; i++) {
+                var node = runtime.gltf.nodes[i];
                 if (node.babylonNode instanceof BABYLON.AbstractMesh) {
                     meshes.push(node.babylonNode);
                 }
             }
-            for (var skl in runtime.gltf.skins) {
-                var skin = runtime.gltf.skins[skl];
+            for (var i = 0; i < runtime.gltf.skins.length; i++) {
+                var skin = runtime.gltf.skins[i];
                 if (skin.babylonSkeleton instanceof BABYLON.Skeleton) {
                     skeletons.push(skin.babylonSkeleton);
                 }
@@ -1073,6 +1027,7 @@ var BABYLON;
                 babylonScene: scene,
                 rootUrl: rootUrl,
                 importOnlyMeshes: importOnlyMeshes,
+                defaultMaterial: undefined
             };
             if (data instanceof ArrayBuffer) {
                 if (!this._parseBinary(runtime, data)) {
@@ -1308,21 +1263,19 @@ var BABYLON;
          * Returns the default material of gltf.
          * @param scene: the Babylon.js scene
          */
-        GLTFUtils.GetDefaultMaterial = function (scene) {
-            if (!GLTFUtils._DefaultMaterial) {
-                var material = new BABYLON.PBRMaterial("gltf_default", scene);
+        GLTFUtils.GetDefaultMaterial = function (runtime) {
+            if (runtime.defaultMaterial === undefined) {
+                var material = new BABYLON.PBRMaterial("gltf_default", runtime.babylonScene);
                 material.sideOrientation = BABYLON.Material.CounterClockWiseSideOrientation;
                 material.albedoColor = new BABYLON.Color3(0.5, 0.5, 0.5);
                 material.metallic = 0;
                 material.roughness = 0.5;
-                GLTFUtils._DefaultMaterial = material;
+                runtime.defaultMaterial = material;
             }
-            return GLTFUtils._DefaultMaterial;
+            return runtime.defaultMaterial;
         };
         return GLTFUtils;
     }());
-    // The GLTF default material
-    GLTFUtils._DefaultMaterial = null;
     BABYLON.GLTFUtils = GLTFUtils;
 })(BABYLON || (BABYLON = {}));
 
