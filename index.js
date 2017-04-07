@@ -80,14 +80,14 @@ function loadScene() {
     });
 
     window.addEventListener("resize", resizeEventListener(engine));
-}
 
-function resizeEventListener(engine) {
-    engine.resize();
-}
+    function resizeEventListener(engine) {
+        engine.resize();
+    }
 
-function renderLoop(scene) {
-    scene.render();
+    function renderLoop(scene) {
+        scene.render();
+    }
 }
 
 function updateLightPosition() {
