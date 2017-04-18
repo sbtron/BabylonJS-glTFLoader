@@ -4,7 +4,26 @@
       "bufferView": 0,
       "byteOffset": 0,
       "componentType": 5126,
-      "count": 2711,
+      "count": 2591,
+      "type": "VEC4",
+      "max": [
+        1.0,
+        1.0,
+        0.105882354,
+        1.0
+      ],
+      "min": [
+        0.03137255,
+        0.03137255,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
       "type": "VEC2",
       "max": [
         0.9917339,
@@ -16,10 +35,10 @@
       ]
     },
     {
-      "bufferView": 1,
+      "bufferView": 2,
       "byteOffset": 0,
       "componentType": 5126,
-      "count": 2711,
+      "count": 2591,
       "type": "VEC3",
       "max": [
         0.9999155,
@@ -33,10 +52,10 @@
       ]
     },
     {
-      "bufferView": 2,
+      "bufferView": 3,
       "byteOffset": 0,
       "componentType": 5126,
-      "count": 2711,
+      "count": 2591,
       "type": "VEC4",
       "max": [
         0.999956131,
@@ -52,10 +71,10 @@
       ]
     },
     {
-      "bufferView": 3,
+      "bufferView": 4,
       "byteOffset": 0,
       "componentType": 5126,
-      "count": 2711,
+      "count": 2591,
       "type": "VEC3",
       "max": [
         0.008106791,
@@ -69,13 +88,13 @@
       ]
     },
     {
-      "bufferView": 4,
+      "bufferView": 5,
       "byteOffset": 0,
       "componentType": 5123,
       "count": 14610,
       "type": "SCALAR",
       "max": [
-        2710
+        2590
       ],
       "min": [
         0
@@ -90,33 +109,38 @@
     {
       "buffer": 0,
       "byteOffset": 0,
-      "byteLength": 21688
+      "byteLength": 41456
     },
     {
       "buffer": 0,
-      "byteOffset": 21688,
-      "byteLength": 32532
+      "byteOffset": 41456,
+      "byteLength": 20728
     },
     {
       "buffer": 0,
-      "byteOffset": 54220,
-      "byteLength": 43376
+      "byteOffset": 62184,
+      "byteLength": 31092
     },
     {
       "buffer": 0,
-      "byteOffset": 97596,
-      "byteLength": 32532
+      "byteOffset": 93276,
+      "byteLength": 41456
     },
     {
       "buffer": 0,
-      "byteOffset": 130128,
+      "byteOffset": 134732,
+      "byteLength": 31092
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 165824,
       "byteLength": 29220
     }
   ],
   "buffers": [
     {
       "uri": "SmilingFace.bin",
-      "byteLength": 159348
+      "byteLength": 195044
     }
   ],
   "extensionsUsed": [
@@ -141,12 +165,13 @@
       "primitives": [
         {
           "attributes": {
-            "TEXCOORD_0": 0,
-            "NORMAL": 1,
-            "TANGENT": 2,
-            "POSITION": 3
+            "COLOR_0": 0,
+            "TEXCOORD_0": 1,
+            "NORMAL": 2,
+            "TANGENT": 3,
+            "POSITION": 4
           },
-          "indices": 4,
+          "indices": 5,
           "material": 0,
           "mode": 4
         }
