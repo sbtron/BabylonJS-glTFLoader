@@ -11421,11 +11421,6 @@ var BABYLON;
                     that._currentScene = newScene;
                     // Wait for textures and shaders to be ready
                     that._currentScene.executeWhenReady(function () {
-                        // Attach camera to canvas inputs
-                        if (!that._currentScene.activeCamera || that._currentScene.lights.length === 0) {
-                            that._currentScene.createDefaultCameraOrLight();
-                        }
-                        that._currentScene.activeCamera.attachControl(that._canvas);
                         if (that._sceneLoadedCallback) {
                             that._sceneLoadedCallback(_this._sceneFileToLoad, that._currentScene);
                         }
@@ -21704,12 +21699,14 @@ var BABYLON;
                 return false;
             }
             var index;
+            // Geometries
             for (index = 0; index < this._geometries.length; index++) {
                 var geometry = this._geometries[index];
                 if (geometry.delayLoadState === BABYLON.Engine.DELAYLOADSTATE_LOADING) {
                     return false;
                 }
             }
+            // Meshes
             for (index = 0; index < this.meshes.length; index++) {
                 var mesh = this.meshes[index];
                 if (!mesh.isEnabled()) {
@@ -23420,6 +23417,7 @@ var BABYLON;
                 if (createArcRotateCamera) {
                     camera = new BABYLON.ArcRotateCamera("default camera", 0, 0, 10, BABYLON.Vector3.Zero(), this);
                     camera.setPosition(new BABYLON.Vector3(worldCenter.x, worldCenter.y, worldExtends.min.z - (worldExtends.max.z - worldExtends.min.z)));
+                    camera.lowerRadiusLimit = 0.5;
                     camera.setTarget(worldCenter);
                 }
                 else {
@@ -23427,6 +23425,9 @@ var BABYLON;
                     camera.position = new BABYLON.Vector3(worldCenter.x, worldCenter.y, worldExtends.min.z - (worldExtends.max.z - worldExtends.min.z));
                     camera.setTarget(worldCenter);
                 }
+                camera.minZ = 0.1;
+                var maxDist = worldExtends.max.subtract(worldExtends.min).length();
+                camera.wheelPrecision = 100.0 / maxDist;
                 this.activeCamera = camera;
             }
         };
@@ -32549,7 +32550,10 @@ var BABYLON;
         };
         StandardMaterial.prototype.clone = function (name) {
             var _this = this;
-            return BABYLON.SerializationHelper.Clone(function () { return new StandardMaterial(name, _this.getScene()); }, this);
+            var result = BABYLON.SerializationHelper.Clone(function () { return new StandardMaterial(name, _this.getScene()); }, this);
+            result.name = name;
+            result.id = name;
+            return result;
         };
         StandardMaterial.prototype.serialize = function () {
             return BABYLON.SerializationHelper.Serialize(this);
@@ -61040,8 +61044,8 @@ var BABYLON;
                 // Colors
                 this._myScene.ambientColor.multiplyToRef(this.ambientColor, this._globalAmbientColor);
                 if (this._defines.METALLICWORKFLOW) {
-                    PBRMaterial._scaledReflectivity.r = this.metallic === undefined ? 1 : this.metallic;
-                    PBRMaterial._scaledReflectivity.g = this.roughness === undefined ? 1 : this.roughness;
+                    PBRMaterial._scaledReflectivity.r = (this.metallic === undefined || this.metallic === null) ? 1 : this.metallic;
+                    PBRMaterial._scaledReflectivity.g = (this.roughness === undefined || this.roughness === null) ? 1 : this.roughness;
                     this._effect.setColor4("vReflectivityColor", PBRMaterial._scaledReflectivity, 0);
                 }
                 else {
