@@ -62,7 +62,7 @@ var hdrTexture = null;
 var skybox = null;
 var light = null;
 var sphere = null;
-var lines = null;
+var lines = [];
 
 function createScene() {
     var showGUI = true;
@@ -192,7 +192,7 @@ function updateModel() {
         mesh.dispose();
     })
 
-    lines = null;
+    lines = [];
 
     var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
     var rootUrl = "src/models/2.0/" + options.imageFormat + "/" + options.model + "/" + options.folder + "/";
@@ -234,21 +234,21 @@ function updateLightPosition() {
 function updateLines() {
     updateDirectLink();
 
-    if (lines) {
-        if (lines.tangents) {
-            lines.tangents.dispose();
+    lines.forEach(function (meshLines) {
+        if (meshLines.tangents) {
+            meshLines.tangents.dispose();
         }
 
-        if (lines.bitangents) {
-            lines.bitangents.dispose();
+        if (meshLines.bitangents) {
+            meshLines.bitangents.dispose();
         }
 
-        if (lines.normals) {
-            lines.normals.dispose();
+        if (meshLines.normals) {
+            meshLines.normals.dispose();
         }
+    });
 
-        lines = null;
-    }
+    lines = [];
 
     if (!options.showNormals) {
         return;
@@ -295,21 +295,23 @@ function addLines(scene, mesh) {
         }
     }
 
-    lines = {};
+    var meshLines = {};
 
-    lines.normals = BABYLON.MeshBuilder.CreateLineSystem("normalLines", { lines: nlines }, scene);
-    lines.normals.color = new BABYLON.Color3(0, 0, 1);
-    lines.normals.parent = mesh;
+    meshLines.normals = BABYLON.MeshBuilder.CreateLineSystem("normalLines", { lines: nlines }, scene);
+    meshLines.normals.color = new BABYLON.Color3(0, 0, 1);
+    meshLines.normals.parent = mesh;
 
     if (tangents !== null) {
-        lines.tangents = BABYLON.MeshBuilder.CreateLineSystem("tangentLines", { lines: tlines }, scene);
-        lines.tangents.color = new BABYLON.Color3(1, 0, 0);
-        lines.tangents.parent = mesh;
+        meshLines.tangents = BABYLON.MeshBuilder.CreateLineSystem("tangentLines", { lines: tlines }, scene);
+        meshLines.tangents.color = new BABYLON.Color3(1, 0, 0);
+        meshLines.tangents.parent = mesh;
 
-        lines.bitangents = BABYLON.MeshBuilder.CreateLineSystem("bitangentLines", { lines: blines }, scene);
-        lines.bitangents.color = new BABYLON.Color3(0, 1, 0);
-        lines.bitangents.parent = mesh;
+        meshLines.bitangents = BABYLON.MeshBuilder.CreateLineSystem("bitangentLines", { lines: blines }, scene);
+        meshLines.bitangents.color = new BABYLON.Color3(0, 1, 0);
+        meshLines.bitangents.parent = mesh;
     }
+
+    lines.push(meshLines);
 }
 
 function updateDirectLink() {
