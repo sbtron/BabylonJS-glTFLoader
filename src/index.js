@@ -11,7 +11,6 @@ var Options = function () {
     this.pointLight = false;
     this.pointLightAngle = 0;
     this.showNormals = false;
-    this.directLink = "";
 };
 
 var models = [
@@ -108,7 +107,6 @@ function createScene() {
         gui.add(options, "pointLight").onChange(updateLight);
         gui.add(options, "pointLightAngle", 0, 360, 0.01).onChange(updateLightPosition);
         gui.add(options, "showNormals").onChange(updateLines);
-        gui.add(options, "directLink").listen();
     }
 
     scene = new BABYLON.Scene(engine);
@@ -129,6 +127,8 @@ function createScene() {
 }
 
 function updateEnvironment() {
+    updateLink();
+
     if (hdrTexture) {
         hdrTexture.dispose();
         hdrTexture = null;
@@ -178,7 +178,7 @@ function updateModelReflectionTextures() {
 }
 
 function updateModel() {
-    updateDirectLink();
+    updateLink();
 
     var meshesToDispose = [];
 
@@ -206,7 +206,7 @@ function updateModel() {
 }
 
 function updateLight() {
-    updateDirectLink();
+    updateLink();
 
     if (!light) {
         light = new BABYLON.PointLight("light", BABYLON.Vector3.Zero, scene);
@@ -232,7 +232,7 @@ function updateLightPosition() {
 }
 
 function updateLines() {
-    updateDirectLink();
+    updateLink();
 
     lines.forEach(function (meshLines) {
         if (meshLines.tangents) {
@@ -314,28 +314,28 @@ function addLines(scene, mesh) {
     lines.push(meshLines);
 }
 
-function updateDirectLink() {
-    var directLink = location.href.split("?")[0] + "?model=" + this.options.model;
+function updateLink() {
+    var link = location.href.split("?")[0] + "?model=" + this.options.model;
 
     if (this.options.folder !== Options.Default.folder) {
-        directLink += "&folder=" + this.options.folder;
+        link += "&folder=" + this.options.folder;
     }
 
     if (this.options.imageFormat !== Options.Default.imageFormat) {
-        directLink += "&imageFormat=" + this.options.imageFormat;
+        link += "&imageFormat=" + this.options.imageFormat;
     }
 
     if (this.options.environment !== Options.Default.environment) {
-        directLink += "&environment=" + this.options.environment;
+        link += "&environment=" + this.options.environment;
     }
 
     if (this.options.pointLight !== Options.Default.pointLight) {
-        directLink += "&pointLight=" + this.options.pointLight;
+        link += "&pointLight=" + this.options.pointLight;
     }
 
     if (this.options.showNormals !== Options.Default.showNormals) {
-        directLink += "&showNormals=" + this.options.showNormals;
+        link += "&showNormals=" + this.options.showNormals;
     }
 
-    this.options.directLink = directLink;
+    window.history.replaceState(null, document.title, link);
 }
