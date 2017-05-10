@@ -24,6 +24,7 @@ var models = [
     "Hourglass",
     "Lantern",
     "PillowPlane",
+    "SimpleSkin",
     "SmilingFace",
     "Telephone",
     "WaterBottle"
@@ -37,7 +38,6 @@ var folders = [
 
 var imageFormats = [
     "jpg",
-    "jpg-with-quantized-png",
     "png"
 ];
 
