@@ -14,6 +14,7 @@ var Options = function () {
 };
 
 var models = [
+    "Alien",
     "AnimatedTriangle",
     "AppleTree",
     "Avocado",
