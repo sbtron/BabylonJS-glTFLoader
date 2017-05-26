@@ -57,6 +57,8 @@ Options.Default = new Options();
 
 var options = new Options();
 var scene = null;
+var model = null;
+var camera = null;
 var hdrTexture = null;
 var skybox = null;
 var light = null;
@@ -112,11 +114,22 @@ function createScene() {
     scene = new BABYLON.Scene(engine);
     scene.useRightHandedSystem = true;
 
-    var camera = new BABYLON.ArcRotateCamera("camera", 4.712, 1.571, 3, BABYLON.Vector3.Zero(), scene);
-    camera.attachControl(canvas);
-    camera.wheelPrecision = 100.0;
+    camera = new BABYLON.ArcRotateCamera("camera", 4.712, 1.571, 2, BABYLON.Vector3.Zero(), scene);
+    camera.attachControl(scene.getEngine().getRenderingCanvas());
     camera.minZ = 0.1;
-    camera.maxZ = 1000;
+    camera.maxZ = 100;
+    camera.lowerRadiusLimit = 0.1;
+    camera.upperRadiusLimit = 5;
+    camera.wheelPrecision = 100;
+
+    skybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 100, scene);
+    skybox.material = new BABYLON.PBRMaterial("skyBox", scene);
+    skybox.material.backFaceCulling = false;
+    skybox.material.microSurface = 1.0;
+    skybox.material.cameraExposure = 0.6;
+    skybox.material.cameraContrast = 1.6;
+    skybox.material.disableLighting = true;
+    skybox.infiniteDistance = true;
 
     updateEnvironment();
     updateModel();
@@ -127,82 +140,94 @@ function createScene() {
 }
 
 function updateEnvironment() {
+    options.attribution = environments[options.environment] || "";
+
     updateLink();
 
     if (hdrTexture) {
         hdrTexture.dispose();
-        hdrTexture = null;
     }
-
-    if (skybox) {
-        skybox.material.dispose();
-        skybox.dispose();
-        skybox = null;
-    }
-
-    if (!options.environment) {
-        return;
-    }
-
-    options.attribution = environments[options.environment] || "";
 
     hdrTexture = new BABYLON.HDRCubeTexture("src/images/" + options.environment + ".babylon.hdr", scene);
 
-    var material = new BABYLON.PBRMaterial("skyBox", scene);
-    material.backFaceCulling = false;
-    material.reflectionTexture = hdrTexture.clone();
-    material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    material.microSurface = 1.0;
-    material.cameraExposure = 0.6;
-    material.cameraContrast = 1.6;
-    material.disableLighting = true;
+    if (skybox.material.reflectionTexture) {
+        skybox.material.reflectionTexture.dispose();
+    }
 
-    skybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 1000.0, scene);
-    skybox.material = material;
-    skybox.infiniteDistance = true;
+    skybox.material.reflectionTexture = hdrTexture.clone();
+    skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
 
     updateModelReflectionTextures();
 }
 
 function updateModelReflectionTextures() {
-    scene.meshes.forEach(function (mesh) {
-        var material = mesh.material;
-        if (material instanceof BABYLON.MultiMaterial) {
-            material.subMaterials.forEach(function (subMaterial) {
-                if (subMaterial instanceof BABYLON.PBRMaterial) {
-                    subMaterial.reflectionTexture = hdrTexture;
-                }
-            });
-        }
-    });
+    if (model) {
+        model.getChildMeshes().forEach(function (mesh) {
+            var material = mesh.material;
+            if (material instanceof BABYLON.MultiMaterial) {
+                material.subMaterials.forEach(function (subMaterial) {
+                    if (subMaterial instanceof BABYLON.PBRMaterial) {
+                        subMaterial.reflectionTexture = hdrTexture;
+                    }
+                });
+            }
+        });
+    }
 }
 
 function updateModel() {
     updateLink();
 
-    var meshesToDispose = [];
+    if (model) {
+        model.dispose();
+        model = null;
+    }
 
-    scene.meshes.forEach(function (mesh) {
-        if (mesh !== skybox && mesh !== sphere) {
-            meshesToDispose.push(mesh);
-        }
-    });
-
-    meshesToDispose.forEach(function (mesh) {
-        mesh.dispose();
-    })
+    scene.skeletons = [];
+    scene.morphTargetManagers = [];
 
     lines = [];
 
     var extension = options.folder.indexOf("Binary") !== -1 ? ".glb" : ".gltf";
     var rootUrl = "src/models/2.0/" + options.imageFormat + "/" + options.model + "/" + options.folder + "/";
     var fileName = options.model + extension;
-    BABYLON.SceneLoader.Append(rootUrl, fileName, scene, function (newScene) {
+    BABYLON.SceneLoader.Append(rootUrl, fileName, scene, function () {
+        model = new BABYLON.Mesh("model", scene);
+        scene.meshes.forEach(function (mesh) {
+            if (!mesh.parent && mesh !== model && mesh !== skybox && mesh !== sphere) {
+                mesh.setParent(model);
+            }
+        });
+
+        var extents = getModelExtents();
+        var size = extents.max.subtract(extents.min);
+        var center = extents.min.add(size.scale(0.5));
+        var maxSizeComponent = Math.max(size.x, size.y, size.z);
+        var oneOverLength = 1 / maxSizeComponent;
+        model.scaling.scaleInPlace(oneOverLength);
+        model.position.subtractInPlace(center.scale(oneOverLength));
+
         updateModelReflectionTextures();
         updateLines();
     }, null, function (newScene) {
         alert("Model '" + options.model + "' failed to load");
     });
+}
+
+function getModelExtents() {
+    var min = new BABYLON.Vector3(Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE);
+    var max = new BABYLON.Vector3(-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
+    model.getChildMeshes().forEach(function (mesh) {
+        mesh.computeWorldMatrix(true);
+        var minBox = mesh.getBoundingInfo().boundingBox.minimumWorld;
+        var maxBox = mesh.getBoundingInfo().boundingBox.maximumWorld;
+        BABYLON.Tools.CheckExtends(minBox, min, max);
+        BABYLON.Tools.CheckExtends(maxBox, min, max);
+    });
+    return {
+        min: min,
+        max: max
+    };
 }
 
 function updateLight() {
