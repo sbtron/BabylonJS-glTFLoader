@@ -1,0 +1,214 @@
+{
+  "accessors": [
+    {
+      "bufferView": 0,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
+      "type": "VEC4",
+      "max": [
+        1.0,
+        1.0,
+        0.105882354,
+        1.0
+      ],
+      "min": [
+        0.03137255,
+        0.03137255,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
+      "type": "VEC2",
+      "max": [
+        0.9917339,
+        -0.0120319128
+      ],
+      "min": [
+        0.0116992,
+        -0.9939886
+      ]
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
+      "type": "VEC3",
+      "max": [
+        0.9999155,
+        0.9999615,
+        0.9998227
+      ],
+      "min": [
+        -0.9999155,
+        -0.9979231,
+        -0.9995511
+      ]
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
+      "type": "VEC4",
+      "max": [
+        0.999956131,
+        0.9999571,
+        0.999797165,
+        1.0
+      ],
+      "min": [
+        -1.0,
+        -0.691328,
+        -0.999797165,
+        -1.0
+      ]
+    },
+    {
+      "bufferView": 4,
+      "byteOffset": 0,
+      "componentType": 5126,
+      "count": 2591,
+      "type": "VEC3",
+      "max": [
+        0.008106791,
+        0.008187642,
+        0.008632781
+      ],
+      "min": [
+        -0.008106791,
+        -0.00818764,
+        -0.007583367
+      ]
+    },
+    {
+      "bufferView": 5,
+      "byteOffset": 0,
+      "componentType": 5123,
+      "count": 14610,
+      "type": "SCALAR",
+      "max": [
+        2590
+      ],
+      "min": [
+        0
+      ]
+    }
+  ],
+  "asset": {
+    "generator": "glTF Tools for Unity",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 41456
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 41456,
+      "byteLength": 20728
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 62184,
+      "byteLength": 31092
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 93276,
+      "byteLength": 41456
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 134732,
+      "byteLength": 31092
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 165824,
+      "byteLength": 29220
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "SmilingFace.bin",
+      "byteLength": 195044
+    }
+  ],
+  "images": [
+    {
+      "uri": "SmilingFace_baseColor.jpg"
+    },
+    {
+      "uri": "SmilingFace_roughnessMetallic.jpg"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "COLOR_0": 0,
+            "TEXCOORD_0": 1,
+            "NORMAL": 2,
+            "TANGENT": 3,
+            "POSITION": 4
+          },
+          "indices": 5,
+          "material": 0,
+          "mode": 4
+        }
+      ],
+      "name": "polySurface168"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      },
+      "name": "emoji_smiling_DF"
+    }
+  ],
+  "nodes": [
+    {
+      "children": [],
+      "mesh": 0,
+      "scale": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "name": "SmilingFace"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "source": 0
+    },
+    {
+      "source": 1
+    }
+  ]
+}

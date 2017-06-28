@@ -39,7 +39,8 @@ var folders = [
 
 var imageFormats = [
     "jpg",
-    "png"
+    "png",
+    "jpg-with-quantized-png"
 ];
 
 // maps to attribution for image files here per cc license guidelines
