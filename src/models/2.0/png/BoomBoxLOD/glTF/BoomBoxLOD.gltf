@@ -77,15 +77,15 @@
     ],
     "images": [
         {
-            "uri": "normal_0.png",
+            "uri": "Normal_0.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "emissive_0.png",
+            "uri": "Emissive_0.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "basecolor_0.png",
+            "uri": "baseColor_0.png",
             "mimeType": "image/png"
         },
         {
@@ -93,15 +93,15 @@
             "mimeType": "image/png"
         },
         {
-            "uri": "normal_1.png",
+            "uri": "Normal_1.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "emissive_1.png",
+            "uri": "Emissive_1.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "basecolor_1.png",
+            "uri": "baseColor_1.png",
             "mimeType": "image/png"
         },
         {
@@ -109,15 +109,15 @@
             "mimeType": "image/png"
         },
         {
-            "uri": "normal_2.png",
+            "uri": "Normal_2.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "emissive_2.png",
+            "uri": "Emissive_2.png",
             "mimeType": "image/png"
         },
         {
-            "uri": "basecolor_2.png",
+            "uri": "baseColor_2.png",
             "mimeType": "image/png"
         },
         {
