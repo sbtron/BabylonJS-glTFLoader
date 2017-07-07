@@ -20,6 +20,7 @@ var models = [
     "Avocado",
     "BarramundiFish",
     "BoomBox",
+    "BoomBoxLOD",
     "Corset",
     "FarmLandDiorama",
     "Hourglass",
