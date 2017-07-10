@@ -152,7 +152,7 @@ function updateEnvironment() {
     }
 
     hdrTexture = new BABYLON.HDRCubeTexture("src/images/" + options.environment + ".babylon.hdr", scene);
-
+    hdrTexture.isBlocking = false;
     if (skybox.material.reflectionTexture) {
         skybox.material.reflectionTexture.dispose();
     }
