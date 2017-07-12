@@ -1,7 +1,6 @@
 {
     "asset": {
-        "version": "2.0",
-        "generator": "Microsoft glTF Exporter"
+        "version": "2.0"
     },
     "accessors": [
         {
@@ -72,57 +71,45 @@
     "buffers": [
         {
             "byteLength": 150616,
-            "uri": "geometry.bin"
+            "uri": "BoomBoxLOD.bin"
         }
     ],
     "images": [
         {
-            "uri": "Normal_0.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_baseColor_0.png"
         },
         {
-            "uri": "Emissive_0.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_occlusionRoughnessMetallic_0.png"
         },
         {
-            "uri": "baseColor_0.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_normal_0.png"
         },
         {
-            "uri": "omr_0.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_emissive_0.png"
         },
         {
-            "uri": "Normal_1.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_baseColor_1.png"
         },
         {
-            "uri": "Emissive_1.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_occlusionRoughnessMetallic_1.png"
         },
         {
-            "uri": "baseColor_1.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_normal_1.png"
         },
         {
-            "uri": "omr_1.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_emissive_1.png"
         },
         {
-            "uri": "Normal_2.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_baseColor_2.png"
         },
         {
-            "uri": "Emissive_2.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_occlusionRoughnessMetallic_2.png"
         },
         {
-            "uri": "baseColor_2.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_normal_2.png"
         },
         {
-            "uri": "omr_2.png",
-            "mimeType": "image/png"
+            "uri": "BoomBox_emissive_2.png"
         }
     ],
     "materials": [
@@ -130,19 +117,16 @@
             "name": "High_LOD",
             "pbrMetallicRoughness": {
                 "baseColorTexture": {
-                    "index": 2
+                    "index": 0
                 },
                 "metallicRoughnessTexture": {
-                    "index": 3
+                    "index": 1
                 }
             },
             "normalTexture": {
-                "index": 0
+                "index": 2
             },
             "occlusionTexture": {
-                "index": 3
-            },
-            "emissiveTexture": {
                 "index": 1
             },
             "emissiveFactor": [
@@ -150,6 +134,9 @@
                 1.0,
                 1.0
             ],
+            "emissiveTexture": {
+                "index": 3
+            },
             "extensions": {
                 "MSFT_lod": {
                     "ids": [
@@ -163,51 +150,51 @@
             "name": "Medium_LOD",
             "pbrMetallicRoughness": {
                 "baseColorTexture": {
-                    "index": 6
+                    "index": 4
                 },
                 "metallicRoughnessTexture": {
-                    "index": 7
+                    "index": 5
                 }
             },
             "normalTexture": {
-                "index": 4
+                "index": 6
             },
             "occlusionTexture": {
-                "index": 7
-            },
-            "emissiveTexture": {
                 "index": 5
             },
             "emissiveFactor": [
                 1.0,
                 1.0,
                 1.0
-            ]
+            ],
+            "emissiveTexture": {
+                "index": 7
+            }
         },
         {
             "name": "Low_LOD",
             "pbrMetallicRoughness": {
                 "baseColorTexture": {
-                    "index": 10
+                    "index": 8
                 },
                 "metallicRoughnessTexture": {
-                    "index": 11
+                    "index": 9
                 }
             },
             "normalTexture": {
-                "index": 8
+                "index": 10
             },
             "occlusionTexture": {
-                "index": 11
-            },
-            "emissiveTexture": {
                 "index": 9
             },
             "emissiveFactor": [
                 1.0,
                 1.0,
                 1.0
-            ]
+            ],
+            "emissiveTexture": {
+                "index": 11
+            }
         }
     ],
     "meshes": [
@@ -253,62 +240,50 @@
     "scene": 0,
     "textures": [
         {
-            "name": "texture_normal0",
             "sampler": 0,
             "source": 0
         },
         {
-            "name": "texture_emissive0",
             "sampler": 0,
             "source": 1
         },
         {
-            "name": "texture_basecolor0",
             "sampler": 0,
             "source": 2
         },
         {
-            "name": "texture_omr0",
             "sampler": 0,
             "source": 3
         },
         {
-            "name": "texture_normal1",
             "sampler": 0,
             "source": 4
         },
         {
-            "name": "texture_emissive1",
             "sampler": 0,
             "source": 5
         },
         {
-            "name": "texture_basecolor1",
             "sampler": 0,
             "source": 6
         },
         {
-            "name": "texture_omr1",
             "sampler": 0,
             "source": 7
         },
         {
-            "name": "texture_normal2",
             "sampler": 0,
             "source": 8
         },
         {
-            "name": "texture_emissive2",
             "sampler": 0,
             "source": 9
         },
         {
-            "name": "texture_basecolor2",
             "sampler": 0,
             "source": 10
         },
         {
-            "name": "texture_omr2",
             "sampler": 0,
             "source": 11
         }

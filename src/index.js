@@ -48,12 +48,12 @@ var imageFormats = [
 // first element must match background name in gui menu
 var environments = {
     "country": "http://www.openfootage.net/",
-    "wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
+    //"wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
     "gray": "http://www.microsoft.com/",
-    "hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
-    "woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
-    "theater": "http://www.hdrlabs.com/",
-    "darkPark": "http://noemotionhdrs.net/"
+    //"hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
+    //"woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
+    //"theater": "http://www.hdrlabs.com/",
+    //"darkPark": "http://noemotionhdrs.net/"
 };
 
 Options.Default = new Options();
@@ -62,7 +62,7 @@ var options = new Options();
 var scene = null;
 var model = null;
 var camera = null;
-var hdrTexture = null;
+var environmentTexture = null;
 var skybox = null;
 var light = null;
 var sphere = null;
@@ -120,19 +120,10 @@ function createScene() {
     camera = new BABYLON.ArcRotateCamera("camera", 4.712, 1.571, 2, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(scene.getEngine().getRenderingCanvas());
     camera.minZ = 0.1;
-    camera.maxZ = 100;
+    camera.maxZ = 1000;
     camera.lowerRadiusLimit = 0.1;
     camera.upperRadiusLimit = 5;
     camera.wheelPrecision = 100;
-
-    skybox = BABYLON.Mesh.CreateBox("hdrSkyBox", 100, scene);
-    skybox.material = new BABYLON.PBRMaterial("skyBox", scene);
-    skybox.material.backFaceCulling = false;
-    skybox.material.microSurface = 1.0;
-    skybox.material.cameraExposure = 0.6;
-    skybox.material.cameraContrast = 1.6;
-    skybox.material.disableLighting = true;
-    skybox.infiniteDistance = true;
 
     updateEnvironment();
     updateModel();
@@ -147,34 +138,21 @@ function updateEnvironment() {
 
     updateLink();
 
-    if (hdrTexture) {
-        hdrTexture.dispose();
+    if (scene.environmentTexture) {
+        scene.environmentTexture.dispose();
+        scene.environmentTexture = null;
     }
 
-    hdrTexture = new BABYLON.HDRCubeTexture("src/images/" + options.environment + ".babylon.hdr", scene);
-    hdrTexture.isBlocking = false;
-    if (skybox.material.reflectionTexture) {
+    scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("src/images/" + options.environment + ".dds", scene);
+    scene.environmentTexture.isBlocking = false;
+
+    if (skybox) {
         skybox.material.reflectionTexture.dispose();
+        skybox.material.reflectionTexture = scene.environmentTexture.clone();
+        skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     }
-
-    skybox.material.reflectionTexture = hdrTexture.clone();
-    skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-
-    updateModelReflectionTextures();
-}
-
-function updateModelReflectionTextures() {
-    if (model) {
-        model.getChildMeshes().forEach(function (mesh) {
-            var material = mesh.material;
-            if (material instanceof BABYLON.MultiMaterial) {
-                material.subMaterials.forEach(function (subMaterial) {
-                    if (subMaterial instanceof BABYLON.PBRMaterial) {
-                        subMaterial.reflectionTexture = hdrTexture;
-                    }
-                });
-            }
-        });
+    else {
+        skybox = scene.createDefaultSkybox();
     }
 }
 
@@ -210,7 +188,6 @@ function updateModel() {
         model.scaling.scaleInPlace(oneOverLength);
         model.position.subtractInPlace(center.scale(oneOverLength));
 
-        updateModelReflectionTextures();
         updateLines();
     }, null, function (newScene) {
         alert("Model '" + options.model + "' failed to load");
