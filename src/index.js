@@ -133,9 +133,12 @@ function createScene() {
 }
 
 function updateEnvironment() {
-    var attribution = environments[options.environment];
-    document.getElementById("attribution").innerText = attribution;
-    document.getElementById("attributionLink").href = attribution;
+    var attributionElement = document.getElementById("attribution");
+    if (attributionElement) {
+        var attribution = environments[options.environment];
+        attributionElement.innerText = attribution;
+        document.getElementById("attributionLink").href = attribution;
+    }
 
     updateLink();
 
@@ -153,14 +156,13 @@ function updateEnvironment() {
     }
 
     scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("src/images/" + options.environment + "SpecularHDR.dds", scene);
-    scene.environmentTexture.isBlocking = false;
 
     if (skybox) {
         skybox.material.reflectionTexture = scene.environmentTexture.clone();
         skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     }
     else {
-        skybox = scene.createDefaultSkybox();
+        skybox = scene.createDefaultSkybox(null, true);
     }
 }
 
