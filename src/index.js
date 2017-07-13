@@ -7,7 +7,6 @@ var Options = function () {
     this.folder = "glTF";
     this.imageFormat = "png";
     this.environment = "country";
-    this.attribution = "";
     this.pointLight = false;
     this.pointLightAngle = 0;
     this.showNormals = false;
@@ -47,13 +46,14 @@ var imageFormats = [
 // maps to attribution for image files here per cc license guidelines
 // first element must match background name in gui menu
 var environments = {
-    "country": "http://www.openfootage.net/",
-    //"wobblyBridge": "https://hdrihaven.com/bundle.php?b=free_bundle",
+    "none": "",
+    "blender": "http://adaptivesamples.com/2017/01/17/blender-institute-hdri/",
+    "country": "https://www.openfootage.net/hdri-360-saalfelden-austria/",
+    "ennis": "http://gl.ict.usc.edu/Data/HighResProbes/",
+    "garage": "https://hdrihaven.com/hdri.php?hdri=garage",
     "gray": "http://www.microsoft.com/",
-    //"hill": "https://hdrihaven.com/bundle.php?b=free_bundle",
-    //"woods": "https://hdrihaven.com/bundle.php?b=free_bundle",
-    //"theater": "http://www.hdrlabs.com/",
-    //"darkPark": "http://noemotionhdrs.net/"
+    "indoor": "https://hdrihaven.com/hdri.php?hdri=blinds",
+    "night": "https://www.openfootage.net/hdri-3-0-360-river-power-station/"
 };
 
 Options.Default = new Options();
@@ -108,7 +108,6 @@ function createScene() {
         gui.add(options, "folder", folders).onChange(updateModel);
         gui.add(options, "imageFormat", imageFormats).onChange(updateModel);
         gui.add(options, "environment", Object.keys(environments)).onChange(updateEnvironment);
-        gui.add(options, "attribution").listen();
         gui.add(options, "pointLight").onChange(updateLight);
         gui.add(options, "pointLightAngle", 0, 360, 0.01).onChange(updateLightPosition);
         gui.add(options, "showNormals").onChange(updateLines);
@@ -134,7 +133,9 @@ function createScene() {
 }
 
 function updateEnvironment() {
-    options.attribution = environments[options.environment] || "";
+    var attribution = environments[options.environment];
+    document.getElementById("attribution").innerText = attribution;
+    document.getElementById("attributionLink").href = attribution;
 
     updateLink();
 
@@ -143,11 +144,18 @@ function updateEnvironment() {
         scene.environmentTexture = null;
     }
 
-    scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("src/images/" + options.environment + ".dds", scene);
+    if (skybox) {
+        skybox.material.reflectionTexture.dispose();
+    }
+
+    if (options.environment === "none") {
+        return;
+    }
+
+    scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("src/images/" + options.environment + "SpecularHDR.dds", scene);
     scene.environmentTexture.isBlocking = false;
 
     if (skybox) {
-        skybox.material.reflectionTexture.dispose();
         skybox.material.reflectionTexture = scene.environmentTexture.clone();
         skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     }
@@ -215,8 +223,9 @@ function updateLight() {
 
     if (!light) {
         light = new BABYLON.PointLight("light", BABYLON.Vector3.Zero, scene);
+        light.intensity = 3;
         sphere = BABYLON.Mesh.CreateSphere("sphere", 16, 0.05, scene);
-        sphere.material = new BABYLON.PBRMaterial("sphere", scene);
+        sphere.material = new BABYLON.StandardMaterial("sphere", scene);
     }
 
     light.setEnabled(options.pointLight);

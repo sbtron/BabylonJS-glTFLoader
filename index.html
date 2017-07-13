@@ -13,9 +13,18 @@
         }
 
         #renderCanvas {
+            position: absolute;
             width: 100%;
             height: 100%;
             touch-action: none;
+        }
+
+        #attribution {
+            position: absolute;
+            margin: 10px;
+            color: white;
+            font-family: sans-serif;
+            text-shadow: 1px 1px 3px #000000;
         }
     </style>
 
@@ -25,7 +34,10 @@
     <script src="src/index.js"></script>
 </head>
 <body>
-    <canvas id="renderCanvas"></canvas>
+    <div>
+        <canvas id="renderCanvas"></canvas>
+        <a id="attributionLink"><div id="attribution"></div></a>
+    </div>
 
     <script>
         var canvas = document.getElementById("renderCanvas");
