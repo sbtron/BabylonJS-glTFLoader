@@ -53,7 +53,8 @@ var environments = {
     "garage": "https://hdrihaven.com/hdri.php?hdri=garage",
     "gray": "http://www.microsoft.com/",
     "indoor": "https://hdrihaven.com/hdri.php?hdri=blinds",
-    "night": "https://www.openfootage.net/hdri-3-0-360-river-power-station/"
+    "night": "https://www.openfootage.net/hdri-3-0-360-river-power-station/",
+    "footprint_court": "http://www.hdrlabs.com/gallery/flashpanos_hollywood/pano.html?Footprint_Court&"
 };
 
 Options.Default = new Options();
@@ -115,7 +116,11 @@ function createScene() {
 
     scene = new BABYLON.Scene(engine);
     scene.useRightHandedSystem = true;
-
+    	scene.clearColor = new BABYLON.Color4(0.02, 0.02, 0.02, 1.0);
+	scene.imageProcessingConfiguration.contrast = 1.6;
+	scene.imageProcessingConfiguration.exposure = 0.6;
+    scene.imageProcessingConfiguration.toneMappingEnabled = true;
+    
     camera = new BABYLON.ArcRotateCamera("camera", 4.712, 1.571, 2, BABYLON.Vector3.Zero(), scene);
     camera.attachControl(scene.getEngine().getRenderingCanvas());
     camera.minZ = 0.1;
@@ -156,13 +161,14 @@ function updateEnvironment() {
     }
 
     scene.environmentTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("src/images/" + options.environment + "SpecularHDR.dds", scene);
-
+    scene.environmentTexture.gammaSpace = false;
+    
     if (skybox) {
         skybox.material.reflectionTexture = scene.environmentTexture.clone();
         skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     }
     else {
-        skybox = scene.createDefaultSkybox(null, true);
+        skybox = scene.createDefaultSkybox(null, true, 1000, 0.3);
     }
 }
 
