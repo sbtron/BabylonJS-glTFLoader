@@ -168,7 +168,7 @@ function updateEnvironment() {
         skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     }
     else {
-        skybox = scene.createDefaultSkybox(null, true, 1000, 0.3);
+        skybox = scene.createDefaultSkybox(null, true,);
     }
 }
 
