@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="scripts/azure-storage.common.js"></script>
+    <script src="scripts/azure-storage.blob.js"></script>
+</head>
+<body>
+    <label><b>SAS Uri:</b> </label> <input type="text" id="sasuri" />
+    <button class="btn btn-xs btn-primary" onclick="listDir()">List Directories</button>
+    <div id="result"></div>
+    <script>
+        var sasuri;
+        var sas;
+        var blobUri;
+        var container;
+
+        function getBlobService() {
+            sasuri = document.getElementById('sasuri').value;
+            sas = sasuri.substring(sasuri.lastIndexOf('?'));
+            blobUri = sasuri.substring(0, sasuri.lastIndexOf('/'));
+            container = sasuri.substring(sasuri.lastIndexOf('/') + 1, sasuri.lastIndexOf('?'));
+
+            var blobService = AzureStorage.createBlobServiceWithSas(blobUri, sas).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
+            return blobService;
+        }
+
+
+        function listDir() {
+            var blobService = getBlobService();
+            if (!blobService) {
+                alert("nothing returned");
+                return;
+            }
+
+            document.getElementById('result').innerHTML = "sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container;
+
+            blobService.listBlobDirectoriesSegmented(container, null, function (error, results) {
+                if (error) {
+                    alert('List blob error, please open browser console to view detailed error');
+                    console.log(error);
+                } else {
+                    var output = [];
+                    output.push('<tr>',
+                        '<th>Directory</th>',
+                        '</tr>');
+                    if (results.entries.length < 1) {
+                        output.push('<tr><td>Empty results...</td></tr>');
+                    }
+                    for (var i = 0, blob; blob = results.entries[i]; i++) {
+                        output.push('<tr>',
+                            '<td>', blob.name, '</td>',
+                            '<td>', '<button onclick="compareDir(\'', blob.name, '\')">Compare Models</button> ',
+                            '</td>',
+                            '</tr>');
+                    }
+                    document.getElementById('result').innerHTML = '<table>' + output.join('') + '</table>';
+                }
+            });
+        }
+
+
+        function compareDir(dir) {
+            var blobService = getBlobService();
+            if (!blobService) {
+                alert("nothing returned");
+                return;
+            }
+
+
+            var win = window.open("", "Comparing folder: " + dir);
+            var script = document.createElement("script");
+            script.src = "https://viewer.babylonjs.com/viewer.min.js";
+            win.document.body.appendChild(script);
+
+            
+            blobService.listBlobsSegmentedWithPrefix(container, dir, null, function (error, results) {
+                if (error) {
+                    alert('List blob error, please open browser console to view detailed error');
+                    console.log(error);
+                } else {
+                    if (results.entries.length < 1) {
+                        win.document.body.innerHTML = "Nothing to display";
+                    }
+                    for (var i = 0, blob; blob = results.entries[i]; i++) {
+                        if ((blob.name.substring(blob.name.lastIndexOf('.')) == ".glb") || (blob.name.substring(blob.name.lastIndexOf('.')) == ".gltf")) {
+                            var source = blobUri + '/' + container + '/' + blob.name + sas;
+                            var divviewer = document.createElement("div")
+                            divviewer.innerHTML = '<p>'+ blob.name +'</p>'+
+                                '<babylon id="' + blob.name + '"></babylon>';
+                            win.document.body.appendChild(divviewer);
+
+                            var viewscript = document.createElement("script");
+                            viewscript.text = 'let domElement_'+i+' = document.getElementById("' + blob.name + '");' +
+                                'let viewer_' + i + ' = new BabylonViewer.DefaultViewer(domElement_' + i +', {' +
+                                'extends: "default",' +
+                                'model: {url: "' + source + '"}' +
+                                '});';
+                            win.document.body.appendChild(viewscript);
+                        }
+                    }
+
+            }
+            });
+            }
+    </script>
+</body>
+</html>
