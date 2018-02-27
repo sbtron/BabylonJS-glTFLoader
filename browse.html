@@ -35,7 +35,7 @@
         var container;
         var blobService;
         var continuationToken;
-
+        var startingat = 1;
         BABYLON.Tools.PreprocessUrl = function (url) {
             var newurl = url;
             if ((url.substring(url.lastIndexOf(".")) == ".bin") || (url.substring(url.lastIndexOf(".")) == ".png") || (url.substring(url.lastIndexOf(".")) == ".jpg")) {
@@ -98,7 +98,11 @@
                                 previewModel(blob.name);
                             }
                     }
-                    document.getElementById('result').innerHTML = '<table>' + output.join('') + '</table>';
+                    
+                    var endingat = startingat + results.entries.length;
+                    document.getElementById('result').innerHTML = '<p>Displaying Results '+ startingat + ' to ' + endingat +'</p>'+
+                                                                    '<table>' + output.join('') + '</table>';
+                    startingat=endingat;
                     continuationToken = results.continuationToken;
                     document.getElementById('nextpage').innerHTML ='<button onClick="listDirNext()">Load Next Page</button>'
         }
@@ -122,6 +126,7 @@
                     }
                     var previewsource = blobUri + "/" + container + "/" + filename + sas;
                     let domElement = document.getElementById(dir);
+                    domElement.innerHTML = "";
                     let viewer = new BabylonViewer.DefaultViewer(domElement, {
                         extends: "default",
                         model: {
