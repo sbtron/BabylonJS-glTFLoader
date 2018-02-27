@@ -6,8 +6,8 @@
     <title>Browse 3D models on Azure Blob Storage</title>
     <style>
         .model {
-            width: 100px;
-            height: 100px
+            width: 300px;
+            height: 300px
         }
     </style>
     <script src="scripts/azure-storage.common.js"></script>
@@ -23,15 +23,18 @@
     <button onclick="listDir()">List Directories</button><br/>
     <label>
         Optional Filter (enter creation ID):
-    </label><input type="text" id="filter" />
+    </label><input type="text" id="filter" /><br/>
+    <label>Page Size:</label><input type="text" id="pagesize" value="10"/><br/>
+    <input type="checkbox" checked=true id="showpreview"/>Show Previews
     <div id="result"></div>
+    <div id="nextpage"></div>
     <script>
         var sasuri;
         var sas;
         var blobUri;
         var container;
         var blobService;
-        var filter;
+        var continuationToken;
 
         BABYLON.Tools.PreprocessUrl = function (url) {
             var newurl = url;
@@ -46,7 +49,6 @@
             sas = sasuri.substring(sasuri.lastIndexOf('?'));
             blobUri = sasuri.substring(0, sasuri.lastIndexOf('/'));
             container = sasuri.substring(sasuri.lastIndexOf('/') + 1, sasuri.lastIndexOf('?'));
-            filter = document.getElementById('filter').value;
             var blobService = AzureStorage.createBlobServiceWithSas(blobUri, sas).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
             return blobService;
         }
@@ -57,34 +59,43 @@
             if (!blobService) {
                alert("Nothing returned");
             }
-
-
             document.getElementById('result').innerHTML = "Loading... <br/> sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container + "<br/> filter by: "+ filter;
+            var filter = document.getElementById('filter').value;
+            var pagesize = document.getElementById("pagesize").value;
 
-            blobService.listBlobDirectoriesSegmentedWithPrefix(container, filter ,null, function (error, results) {
+            blobService.listBlobDirectoriesSegmentedWithPrefix(container, filter ,null, {maxResults:pagesize},function (error, results) {
                 if (error) {
                     alert('List blob error, please open browser console to view detailed error');
                     console.log(error);
                 } else {
-                    var output = [];
+                    displayTable(results);
+                }
+            });
+        }
+
+        function displayTable(results){
+            var output = [];
                     output.push('<tr>',
-                        '<th>Directory</th>',
+                        '<th>Preview</th><th>Directory</th>',
                         '</tr>');
                     if (results.entries.length < 1) {
                         output.push('<tr><td>Empty results...</td></tr>');
                     }
                     for (var i = 0, blob; blob = results.entries[i]; i++) {
                         output.push('<tr>',
-                            '<td>', blob.name, '</td>',
-                            '<td>', '<button onclick="compareDir(\'', blob.name, '\')">Compare Models</button> ',
-                            '<td>', '<button onclick="previewModel(\'', blob.name, '\')">Preview Model</button> ',
                             '<td>', '<babylon class=model id="', blob.name, '"></babylon> ',
+                            '<td>', blob.name, '<br/>',
+                            '<button onclick="compareDir(\'', blob.name, '\')">Compare Models</button><br/>',
+                            '<button onclick="previewModel(\'', blob.name, '\')">Preview Model</button>',
                             '</td>',
                             '</tr>');
+                            if(document.getElementById("showpreview").checked==true){
+                                previewModel(blob.name);
+                            }
                     }
                     document.getElementById('result').innerHTML = '<table>' + output.join('') + '</table>';
-                }
-            });
+                    continuationToken = results.continuationToken;
+                    document.getElementById('nextpage').innerHTML ='<button onClick="listDirNext()">Load Next Page</button>'
         }
 
         function previewModel(dir) {
@@ -120,6 +131,25 @@
                     }
                 });
             }
+
+        function listDirNext() {
+            if (!blobService) {
+                alert("List Directories First");
+                return;
+            }
+            var filter = document.getElementById('filter').value;
+            var pagesize = document.getElementById("pagesize").value;
+
+            blobService.listBlobDirectoriesSegmentedWithPrefix(container, filter ,continuationToken, {maxResults:pagesize},function (error, results) {
+                if (error) {
+                    alert('List blob error, please open browser console to view detailed error');
+                    console.log(error);
+                } else {
+                    displayTable(results);
+                }
+            });
+        }
+
 
         function compareDir(dir) {
             if (!blobService) {
