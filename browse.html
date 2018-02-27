@@ -46,6 +46,10 @@
 
         function getBlobService() {
             sasuri = document.getElementById('sasuri').value;
+            if(sasuri.length==0){
+                alert("Provide a SAS URI to proceed");
+                return;
+            }
             sas = sasuri.substring(sasuri.lastIndexOf('?'));
             blobUri = sasuri.substring(0, sasuri.lastIndexOf('/'));
             container = sasuri.substring(sasuri.lastIndexOf('/') + 1, sasuri.lastIndexOf('?'));
@@ -58,6 +62,7 @@
             blobService = getBlobService();
             if (!blobService) {
                alert("Nothing returned");
+               return;
             }
             document.getElementById('result').innerHTML = "Loading... <br/> sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container + "<br/> filter by: "+ filter;
             var filter = document.getElementById('filter').value;
