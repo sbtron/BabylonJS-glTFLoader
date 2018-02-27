@@ -20,7 +20,10 @@
         <b>SAS Uri:</b>
     </label>
     <input type="text" id="sasuri" />
-    <button onclick="listDir()">List Directories</button>
+    <button onclick="listDir()">List Directories</button><br/>
+    <label>
+        Optional Filter (enter creation ID):
+    </label><input type="text" id="filter" />
     <div id="result"></div>
     <script>
         var sasuri;
@@ -28,6 +31,7 @@
         var blobUri;
         var container;
         var blobService;
+        var filter;
 
         BABYLON.Tools.PreprocessUrl = function (url) {
             var newurl = url;
@@ -42,7 +46,7 @@
             sas = sasuri.substring(sasuri.lastIndexOf('?'));
             blobUri = sasuri.substring(0, sasuri.lastIndexOf('/'));
             container = sasuri.substring(sasuri.lastIndexOf('/') + 1, sasuri.lastIndexOf('?'));
-
+            filter = document.getElementById('filter').value;
             var blobService = AzureStorage.createBlobServiceWithSas(blobUri, sas).withFilter(new AzureStorage.ExponentialRetryPolicyFilter());
             return blobService;
         }
@@ -55,9 +59,9 @@
             }
 
 
-            document.getElementById('result').innerHTML = "Loading... <br/> sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container;
+            document.getElementById('result').innerHTML = "Loading... <br/> sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container + "<br/> filter by: "+ filter;
 
-            blobService.listBlobDirectoriesSegmented(container, null, function (error, results) {
+            blobService.listBlobDirectoriesSegmentedWithPrefix(container, filter ,null, function (error, results) {
                 if (error) {
                     alert('List blob error, please open browser console to view detailed error');
                     console.log(error);
