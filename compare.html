@@ -1,0 +1,25 @@
+<html>
+<head>
+    <style>
+    .model {
+        width:800px;
+        height:600px
+    }
+    </style>
+    <script src="https://viewer.babylonjs.com/viewer.min.js"></script>
+    <script>
+        var sas;
+        BabylonViewer.viewerManager.onViewerAdded = function(viewer) {
+            BABYLON.Tools.PreprocessUrl = function (url) {
+            var newurl = url;
+            if ((url.substring(url.lastIndexOf(".")) == ".bin") || (url.substring(url.lastIndexOf(".")) == ".png") || (url.substring(url.lastIndexOf(".")) == ".jpg")) {
+                newurl += sas;
+            }
+            return newurl;
+        };
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

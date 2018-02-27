@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Browse 3D models on Azure Blob Storage</title>
+    <style>
+        .model {
+            width: 100px;
+            height: 100px
+        }
+    </style>
     <script src="scripts/azure-storage.common.js"></script>
     <script src="scripts/azure-storage.blob.js"></script>
+    <script src="https://viewer.babylonjs.com/viewer.min.js"></script>
 </head>
+
 <body>
-    <label><b>SAS Uri:</b> </label> <input type="text" id="sasuri" />
+    <label>
+        <b>SAS Uri:</b>
+    </label>
+    <input type="text" id="sasuri" />
     <button onclick="listDir()">List Directories</button>
     <div id="result"></div>
     <script>
@@ -15,6 +27,15 @@
         var sas;
         var blobUri;
         var container;
+        var blobService;
+
+        BABYLON.Tools.PreprocessUrl = function (url) {
+            var newurl = url;
+            if ((url.substring(url.lastIndexOf(".")) == ".bin") || (url.substring(url.lastIndexOf(".")) == ".png") || (url.substring(url.lastIndexOf(".")) == ".jpg")) {
+                newurl += sas;
+            }
+            return newurl;
+        };
 
         function getBlobService() {
             sasuri = document.getElementById('sasuri').value;
@@ -28,13 +49,13 @@
 
 
         function listDir() {
-            var blobService = getBlobService();
+            blobService = getBlobService();
             if (!blobService) {
-                alert("nothing returned");
-                return;
+               alert("Nothing returned");
             }
 
-            document.getElementById('result').innerHTML = "sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container;
+
+            document.getElementById('result').innerHTML = "Loading... <br/> sas: " + sas + "<br/>blobUri: " + blobUri + "<br/>container : " + container;
 
             blobService.listBlobDirectoriesSegmented(container, null, function (error, results) {
                 if (error) {
@@ -52,6 +73,8 @@
                         output.push('<tr>',
                             '<td>', blob.name, '</td>',
                             '<td>', '<button onclick="compareDir(\'', blob.name, '\')">Compare Models</button> ',
+                            '<td>', '<button onclick="previewModel(\'', blob.name, '\')">Preview Model</button> ',
+                            '<td>', '<babylon class=model id="', blob.name, '"></babylon> ',
                             '</td>',
                             '</tr>');
                     }
@@ -60,50 +83,83 @@
             });
         }
 
-
-        function compareDir(dir) {
-            var blobService = getBlobService();
+        function previewModel(dir) {
             if (!blobService) {
-                alert("nothing returned");
+                alert("List Directories First");
                 return;
             }
-
-
-            var win = window.open("", "Comparing folder: " + dir);
-            var script = document.createElement("script");
-            script.src = "https://viewer.babylonjs.com/viewer.min.js";
-            win.document.body.appendChild(script);
-
-            
-            blobService.listBlobsSegmentedWithPrefix(container, dir, null, function (error, results) {
+            blobService.listBlobsSegmentedWithPrefix(container, dir + "PreviewProxy", null, function (error, results) {
                 if (error) {
                     alert('List blob error, please open browser console to view detailed error');
                     console.log(error);
                 } else {
-                    if (results.entries.length < 1) {
-                        win.document.body.innerHTML = "Nothing to display";
-                    }
+                    var filename;
                     for (var i = 0, blob; blob = results.entries[i]; i++) {
                         if ((blob.name.substring(blob.name.lastIndexOf('.')) == ".glb") || (blob.name.substring(blob.name.lastIndexOf('.')) == ".gltf")) {
-                            var source = blobUri + '/' + container + '/' + blob.name + sas;
-                            var divviewer = document.createElement("div")
-                            divviewer.innerHTML = '<p>'+ blob.name +'</p>'+
-                                '<babylon id="' + blob.name + '"></babylon>';
-                            win.document.body.appendChild(divviewer);
-
-                            var viewscript = document.createElement("script");
-                            viewscript.text = 'let domElement_'+i+' = document.getElementById("' + blob.name + '");' +
-                                'let viewer_' + i + ' = new BabylonViewer.DefaultViewer(domElement_' + i +', {' +
-                                'extends: "default",' +
-                                'model: {url: "' + source + '"}' +
-                                '});';
-                            win.document.body.appendChild(viewscript);
+                            filename = blob.name;
+                            break;
                         }
                     }
+                    var previewsource = blobUri + "/" + container + "/" + filename + sas;
+                    let domElement = document.getElementById(dir);
+                    let viewer = new BabylonViewer.DefaultViewer(domElement, {
+                        extends: "default",
+                        model: {
+                            url: previewsource
+                        },
+                        templates: {
+                            navBar: {
+                                html: '<div></div>'
+                            }
+                        }
+                    });
+                    }
+                });
+            }
 
+        function compareDir(dir) {
+            if (!blobService) {
+                alert("List Directories First");
+                return;
             }
-            });
-            }
+
+                    var win = window.open("compare.html", "Comparing folder: " + dir);
+                    win.sas = sas;
+
+
+                    blobService.listBlobsSegmentedWithPrefix(container, dir, null, function (error, results) {
+                        if (error) {
+                            alert('List blob error, please open browser console to view detailed error');
+                            console.log(error);
+                        } else {
+                            if (results.entries.length < 1) {
+                                win.document.body.innerHTML = "Nothing to display";
+                            }
+                            for (var i = 0, blob; blob = results.entries[i]; i++) {
+                                if ((blob.name.substring(blob.name.lastIndexOf('.')) == ".glb") || (blob.name.substring(blob.name.lastIndexOf('.')) == ".gltf")) {
+                                    var source = blobUri + '/' + container + '/' + blob.name + sas;
+                                    var divviewer = document.createElement("div")
+                                    divviewer.innerHTML = '<p>' + blob.name + '</p>' +
+                                        '<div class=model id="' + blob.name + '"></div>';
+                                    win.document.body.appendChild(divviewer);
+
+                                    var viewscript = document.createElement("script");
+                                    viewscript.text = 'let domElement_' + i + ' = document.getElementById("' + blob.name + '");' +
+                                        'let viewer_' + i + ' = new BabylonViewer.DefaultViewer(domElement_' + i + ', {' +
+                                        'extends: "default",' +
+                                        'scene: {' +
+                                        'debug: true' +
+                                        '},' +
+                                        'model: {url: "' + source + '"}' +
+                                        '});';
+                                    win.document.body.appendChild(viewscript);
+                                }
+                            }
+
+                        }
+                    });
+                }
     </script>
 </body>
+
 </html>
