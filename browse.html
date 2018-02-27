@@ -99,7 +99,7 @@
                             }
                     }
                     
-                    var endingat = startingat + results.entries.length;
+                    var endingat = startingat + results.entries.length-1;
                     document.getElementById('result').innerHTML = '<p>Displaying Results '+ startingat + ' to ' + endingat +'</p>'+
                                                                     '<table>' + output.join('') + '</table>';
                     startingat=endingat;
